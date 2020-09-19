@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Freeverb, PingPongDelay, Master, Sampler } from "tone";
+import client from "../mqtt"
 import A from "../assets/A.mp3"
+
 const samples = {
     C3: A
 }
 
+
 export default () => {
   const [instrument, setInstrument] = useState(null);
+  const [note, setNote] = useState("")
+  const [velocity, setVelocity] = useState(0)
 //   const note = useSelector(getNote(type));
 //   const velocity = useSelector(getVelocity(type));
 //   const user = useSelector(getUser(type));
@@ -26,7 +31,22 @@ export default () => {
     pingPongDelay.connect(reverb);
     reverb.connect(Master);
     setInstrument(inst);
+    console.log("setup instrument")
+
   }, []);
+  useEffect(() => {
+    client.on('message', function (topic, message) {
+        if(!instrument) return;
+        console.log("on message")
+        // message is Buffer
+        console.log(message.toString())
+        if(instrument) instrument.triggerAttackRelease("C3", 0.8)
+        })
+    client.subscribe("vgig/test")
+    console.log("subscribed")
+  }, [instrument], ()=> {
+      client.unsubscribe("vgig/test")
+  });
 
 //   useEffect(() => {
 //     if (instrument) {

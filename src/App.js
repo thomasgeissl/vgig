@@ -5,13 +5,20 @@ import {
   Route,
   Link
 } from "react-router-dom";
-
+import styled from "styled-components"
 import Audience from "./components/Audience"
 import Conductor from "./components/Conductor"
 
-function App() {
+const App = styled.div`
+width: 100vw;
+height: 100vh;
+background-color: lightgreen;
+`
+
+
+export default () => {
   return (
-    <div className="App">
+    <App>
           <Router>
           <Switch>
           <Route path="/conductor">
@@ -20,11 +27,8 @@ function App() {
           <Route path="/">
             <Audience />
           </Route>
-
         </Switch>
           </Router>
-    </div>
- )
-}
-
-export default App;
+    </App>
+  )
+};
