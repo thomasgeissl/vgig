@@ -4,6 +4,23 @@ object-assign
 @license MIT
 */
 
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+
+/*! https://mths.be/punycode v1.4.1 by @mathias */
+
+/**
+ * A better abstraction over CSS.
+ *
+ * @copyright Oleg Isonen (Slobodskoi) / Isonen 2014-present
+ * @website https://github.com/cssinjs/jss
+ * @license MIT
+ */
+
 /**
  * Tone.js
  * @author Yotam Mann
