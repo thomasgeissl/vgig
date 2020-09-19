@@ -1,5 +1,6 @@
 {
   "name": "vgig",
+  "homepage": "https://thomasgeissl.github.io/vgig",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
