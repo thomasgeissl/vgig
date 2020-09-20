@@ -2,50 +2,62 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Freeverb, PingPongDelay, Master, Sampler } from "tone";
 import client from "../mqtt"
+import {status as statusTypes} from "../midi"
 import A from "../assets/A.mp3"
+import Violin_C3 from "../assets/violin_c3.mp3"
 
 const samples = {
     C3: A
 }
 
+const violinSamples = {
+    C3: Violin_C3
+}
 
 export default () => {
-  const [instrument, setInstrument] = useState(null);
-  const [note, setNote] = useState("")
-  const [velocity, setVelocity] = useState(0)
-//   const note = useSelector(getNote(type));
-//   const velocity = useSelector(getVelocity(type));
-//   const user = useSelector(getUser(type));
+  const [percussion, setPercussion] = useState(null);
+  const [violin, setViolin] = useState(null);
 
   useEffect(() => {
-    const inst = new Sampler(samples);
-    inst.volume.value = -6;
+    const percussion = new Sampler(samples);
+    percussion.volume.value = -6;
     const reverb = new Freeverb(0.6, 5000);
     const pingPongDelay = new PingPongDelay({
       delayTime: "32n",
       feedback: 0.7,
       wet: 0.25,
     });
-    inst.volume.value = -24;
-    inst.connect(pingPongDelay);
+    percussion.volume.value = 0;
+    percussion.connect(pingPongDelay);
     pingPongDelay.connect(reverb);
     reverb.connect(Master);
-    setInstrument(inst);
-    console.log("setup instrument")
+    setPercussion(percussion);
 
+    const violin = new Sampler(violinSamples)
+    violin.volume.value = 0
+    violin.connect(Master)
+    setViolin(violin)
   }, []);
+
   useEffect(() => {
+    // TODO: only fire once
     client.on('message', function (topic, message) {
-        if(!instrument) return;
-        console.log("on message")
-        // message is Buffer
-        console.log(message.toString())
-        if(instrument) instrument.triggerAttackRelease("C3", 0.8)
-        })
-    client.subscribe("vgig/test")
-    console.log("subscribed")
-  }, [instrument], ()=> {
-      client.unsubscribe("vgig/test")
+      const {channel, note, velocity, status} = JSON.parse(message.toString())
+      if(status != statusTypes.noteOn) return
+      switch(channel){
+        case 1: {
+          if(percussion) percussion.triggerAttackRelease(note)
+          break;
+        }
+        case 2: {
+          if(violin) violin.triggerAttackRelease(note)
+          break;
+        }
+      }
+    })
+    client.subscribe("vgig/midi")
+  }, [percussion, violin], ()=> {
+      client.unsubscribe("vgig/midi")
   });
 
 //   useEffect(() => {
@@ -61,6 +73,6 @@ export default () => {
 //   }, [instrument, note, velocity]);
 
   return (
-      <h1 onClick={()=> instrument.triggerAttackRelease("C3", 0.2)}>orchestra</h1>
+      <h1 onClick={()=> percussion.triggerAttackRelease("C3", 0.2)}>orchestra</h1>
   );
 };
