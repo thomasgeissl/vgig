@@ -6,13 +6,12 @@ import {
   Link
 } from "react-router-dom";
 import styled from "styled-components"
-import Audience from "./components/Audience"
 import Conductor from "./components/Conductor"
+import Hall from "./components/Hall"
 
 const App = styled.div`
 width: 100vw;
 height: 100vh;
-background-color: lightgreen;
 `
 
 
@@ -25,7 +24,7 @@ export default () => {
             <Conductor />
           </Route>
           <Route path="/">
-            <Audience />
+            <Hall />
           </Route>
         </Switch>
           </Router>
