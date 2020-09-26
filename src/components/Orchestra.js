@@ -13,6 +13,8 @@ import { OrbitControls } from 'drei'
 import * as meshline from 'threejs-meshline'
 import { extend, Canvas, useFrame, useThree } from 'react-three-fiber'
 
+import {NAME} from  "../constants"
+
 const samples = {
     C3: A
 }
@@ -73,7 +75,7 @@ function Lines({ count, colors }) {
 }
 
 
-export default () => {
+export default ({id}) => {
   const [percussion, setPercussion] = useState(null);
   const [violin, setViolin] = useState(null);
 
@@ -114,9 +116,11 @@ export default () => {
         }
       }
     })
-    client.subscribe("vgig/midi")
+    client.on("connect", ()=>{
+      client.subscribe(`${NAME}/${id}/orchestra`)
+    })
   }, [percussion, violin], ()=> {
-      client.unsubscribe("vgig/midi")
+      client.unsubscribe(id)
   });
 
 //   useEffect(() => {
