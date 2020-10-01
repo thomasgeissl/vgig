@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef} from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components"
 import { Freeverb, PingPongDelay, Master, Sampler } from "tone";
-import client from "../mqtt"
 import {status as statusTypes} from "../midi"
 import A from "../assets/A.mp3"
 import Violin_C3 from "../assets/violin_c3.mp3"
@@ -11,7 +9,8 @@ import Violin_C3 from "../assets/violin_c3.mp3"
 import * as THREE from 'three'
 import { OrbitControls } from 'drei'
 import * as meshline from 'threejs-meshline'
-import { extend, Canvas, useFrame, useThree } from 'react-three-fiber'
+import { extend, Canvas, useFrame } from 'react-three-fiber'
+import { useClient } from "../mqttConnection"
 
 import {NAME} from  "../constants"
 
@@ -78,6 +77,7 @@ function Lines({ count, colors }) {
 export default ({id}) => {
   const [percussion, setPercussion] = useState(null);
   const [violin, setViolin] = useState(null);
+  const { subscribe, unsubscribe } = useClient()
 
   useEffect(() => {
     const percussion = new Sampler(samples);
@@ -100,11 +100,11 @@ export default ({id}) => {
     setViolin(violin)
   }, []);
 
+  
   useEffect(() => {
-    // TODO: only fire once
-    client.on('message', function (topic, message) {
-      const {channel, note, velocity, status} = JSON.parse(message.toString())
-      if(status != statusTypes.noteOn) return
+    subscribe( `${NAME}/${id}/orchestra`, (topic, message) => {
+      const {channel, note, status} = message
+      if(status !== statusTypes.noteOn) return
       switch(channel){
         case 1: {
           if(percussion) percussion.triggerAttackRelease(note)
@@ -114,26 +114,14 @@ export default ({id}) => {
           if(violin) violin.triggerAttackRelease(note)
           break;
         }
+        default : {
+          break;
+        }
       }
     })
-    client.on("connect", ()=>{
-      client.subscribe(`${NAME}/${id}/orchestra`)
-    })
-  }, [percussion, violin], ()=> {
-      client.unsubscribe(id)
+  }, [percussion, violin, id], ()=> {
+      unsubscribe(`${NAME}/${id}/orchestra`)
   });
-
-//   useEffect(() => {
-//     if (instrument) {
-//       if (note) {
-//         // TODO: check why this is not working
-//         // instrument.triggerAttack(note, 0, velocity);
-//         instrument.triggerAttack(note, undefined, velocity);
-//       } else {
-//         instrument.triggerRelease();
-//       }
-//     }
-//   }, [instrument, note, velocity]);
 
   return (
     <Container>

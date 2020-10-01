@@ -3,8 +3,11 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components"
 import Audience from "./Audience"
 import Orchestra from "./Orchestra"
+import Interactions from "./Interactions"
 
 import Context from "../Context"
+import {NAME} from  "../constants"
+import { useClient } from "../mqttConnection"
 
 const Container = styled.div`
     .audience {
@@ -17,14 +20,18 @@ const Container = styled.div`
 export default () => {
     const { id } = useParams();
     const [context, setContext] = useContext(Context)
+    const { publish } = useClient()
+
     useEffect(()=> {
         setContext({...context, hallId: id})
-        console.log("send hello", context.userId, id)
-    },[id])
+        publish(`${NAME}/${id}/enter`, {userId: context.userId})
+    },[id, context.userId])
+
     return (
         <Container>
             <Orchestra className="orchestra" id={id}></Orchestra>
             <Audience className="audience" id={id}></Audience>
+            <Interactions className="interactions" id={id}></Interactions>
         </Container>
     )
 }
