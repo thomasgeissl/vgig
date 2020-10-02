@@ -4,8 +4,8 @@ import Button from '@material-ui/core/Button';
 import {Sampler} from "tone"
 
 import Context from "../Context"
-import ClappingSample from "../assets/violin_c3.mp3"
-import TalkingSample from "../assets/violin_c3.mp3"
+import ClappingSample from "../assets/clapping.mp3"
+import TalkingSample from "../assets/talking.mp3"
 import EnterSample from "../assets/enter.mp3"
 import {NAME} from  "../constants"
 import { useClient } from "../mqttConnection"
@@ -59,10 +59,10 @@ export default () => {
     }, [])
     useEffect(() => {
         subscribe(`${NAME}/${context.hallId}/clapping`, (topic, message) => {
-            clapping.triggerAttackRelease(60, 20)
+            clapping.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
         })
         subscribe(`${NAME}/${context.hallId}/talking`, (topic, message) => {
-            talking.triggerAttackRelease(60, 20)
+            talking.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
         })
         subscribe(`${NAME}/${context.hallId}/enter`, (topic, message) => {
             enter.triggerAttackRelease(72, 20)
