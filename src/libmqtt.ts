@@ -44,7 +44,7 @@ interface Client {
     getClient(): MqttClient
 }
 
-export function createConnection(options: IClientOptions) {
+export function createConnection(options: string) {
     let client = connect(options)
     let listeners: Map<string, Array<Function>> = new Map()
 

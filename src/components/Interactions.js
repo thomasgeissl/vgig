@@ -6,6 +6,7 @@ import {Sampler} from "tone"
 import Context from "../Context"
 import ClappingSample from "../assets/violin_c3.mp3"
 import TalkingSample from "../assets/violin_c3.mp3"
+import EnterSample from "../assets/enter.mp3"
 import {NAME} from  "../constants"
 import { useClient } from "../mqttConnection"
 
@@ -15,6 +16,9 @@ const clappingSamples = {
 }
 const talkingSamples = {
     C3: TalkingSample
+}
+const enterSamples = {
+    C3: EnterSample
 }
 
 const Container = styled.div`
@@ -31,6 +35,7 @@ export default () => {
     const { subscribe, publish, getClient } = useClient()
     const [clapping, setClapping] = useState(null)
     const [talking, setTalking] = useState(null)
+    const [enter, setEnter] = useState(null)
     useEffect(()=>{
         const clapping = new Sampler(clappingSamples);
         clapping.toDestination()
@@ -41,6 +46,11 @@ export default () => {
         talking.toDestination()
         talking.volume.value = .2
         setTalking(talking)
+
+        const enter = new Sampler(enterSamples);
+        enter.toDestination()
+        enter.volume.value = .2
+        setEnter(enter)
 
         const client = getClient();
         client.on("connect", () => {
@@ -55,11 +65,13 @@ export default () => {
             talking.triggerAttackRelease(60, 20)
         })
         subscribe(`${NAME}/${context.hallId}/enter`, (topic, message) => {
+            enter.triggerAttackRelease(72, 20)
             console.log("user entered", message)
         })
         subscribe(`${NAME}/${context.hallId}/leave`, (topic, message) => {
             console.log("user left", message)
         })
+        console.log("done subscribing")
     }, [context.hallId])
     
     return (

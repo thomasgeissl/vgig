@@ -23,9 +23,11 @@ export default () => {
     const { publish } = useClient()
 
     useEffect(()=> {
+        console.log("entering")
         setContext({...context, hallId: id})
         publish(`${NAME}/${id}/enter`, {userId: context.userId})
-    },[id, context.userId])
+    },[id])
+
 
     return (
         <Container>
