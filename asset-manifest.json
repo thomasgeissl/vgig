@@ -1,27 +1,32 @@
 {
   "files": {
     "main.css": "/vgig/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/vgig/static/js/main.7a940de6.chunk.js",
-    "main.js.map": "/vgig/static/js/main.7a940de6.chunk.js.map",
+    "main.js": "/vgig/static/js/main.804a6d3d.chunk.js",
+    "main.js.map": "/vgig/static/js/main.804a6d3d.chunk.js.map",
     "runtime-main.js": "/vgig/static/js/runtime-main.87f0bc5c.js",
     "runtime-main.js.map": "/vgig/static/js/runtime-main.87f0bc5c.js.map",
-    "static/js/2.c8a52dfb.chunk.js": "/vgig/static/js/2.c8a52dfb.chunk.js",
-    "static/js/2.c8a52dfb.chunk.js.map": "/vgig/static/js/2.c8a52dfb.chunk.js.map",
+    "static/js/2.251136fa.chunk.js": "/vgig/static/js/2.251136fa.chunk.js",
+    "static/js/2.251136fa.chunk.js.map": "/vgig/static/js/2.251136fa.chunk.js.map",
     "index.html": "/vgig/index.html",
-    "precache-manifest.c629d786becf6a6d0349724d25f6ca31.js": "/vgig/precache-manifest.c629d786becf6a6d0349724d25f6ca31.js",
+    "precache-manifest.98c59ece80f2e2599d0cab19b39820a9.js": "/vgig/precache-manifest.98c59ece80f2e2599d0cab19b39820a9.js",
     "service-worker.js": "/vgig/service-worker.js",
     "static/css/main.5ecd60fb.chunk.css.map": "/vgig/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.c8a52dfb.chunk.js.LICENSE.txt": "/vgig/static/js/2.c8a52dfb.chunk.js.LICENSE.txt",
+    "static/js/2.251136fa.chunk.js.LICENSE.txt": "/vgig/static/js/2.251136fa.chunk.js.LICENSE.txt",
     "static/media/A.mp3": "/vgig/static/media/A.5e794cdb.mp3",
     "static/media/clapping.mp3": "/vgig/static/media/clapping.31212348.mp3",
     "static/media/enter.mp3": "/vgig/static/media/enter.339b495d.mp3",
-    "static/media/talking.mp3": "/vgig/static/media/talking.1807f6a5.mp3",
-    "static/media/violin_c3.mp3": "/vgig/static/media/violin_c3.bbc9708e.mp3"
+    "static/media/photograph.mp3": "/vgig/static/media/photograph.437bf6fd.mp3",
+    "static/media/sneeze.mp3": "/vgig/static/media/sneeze.62f3207f.mp3",
+    "static/media/talk_C2.mp3": "/vgig/static/media/talk_C2.4fdd1dcf.mp3",
+    "static/media/talk_C3.mp3": "/vgig/static/media/talk_C3.f2a775cc.mp3",
+    "static/media/talk_C4.mp3": "/vgig/static/media/talk_C4.cfab9d69.mp3",
+    "static/media/violin_c3.mp3": "/vgig/static/media/violin_c3.bbc9708e.mp3",
+    "static/media/walk.mp3": "/vgig/static/media/walk.6a028ea7.mp3"
   },
   "entrypoints": [
     "static/js/runtime-main.87f0bc5c.js",
-    "static/js/2.c8a52dfb.chunk.js",
+    "static/js/2.251136fa.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.7a940de6.chunk.js"
+    "static/js/main.804a6d3d.chunk.js"
   ]
 }
