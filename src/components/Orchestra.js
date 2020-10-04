@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef} from "react";
 import styled from "styled-components"
-import { Freeverb, PingPongDelay, Destination, Sampler, FMSynth, MetalSynth, NoiseSynth } from "tone";
+import { Analyser, Freeverb, PingPongDelay, Destination, Sampler, FMSynth, MetalSynth, NoiseSynth, Channel} from "tone";
 import {status as statusTypes} from "../midi"
 import A from "../assets/A.mp3"
 import Violin_C3 from "../assets/violin_c3.mp3"
@@ -13,14 +13,6 @@ import { extend, Canvas, useFrame } from 'react-three-fiber'
 import { useClient } from "../mqttConnection"
 
 import {NAME} from  "../constants"
-
-const samples = {
-    C3: A
-}
-
-const violinSamples = {
-    C3: Violin_C3
-}
 
 const Container = styled.div`
   width: 100%;
@@ -75,15 +67,26 @@ function Lines({ count, colors }) {
 
 
 export default ({id}) => {
+  const [channel, setChannel] = useState(null);
+  const [analyzer, setAnalyzer] = useState(null);
   const [percussion, setPercussion] = useState(null);
   const [violin, setViolin] = useState(null);
   const [bass, setBass] = useState(null);
   const [metal, setMetal] = useState(null);
   const [noise, setNoise] = useState(null);
+
   const { subscribe, unsubscribe } = useClient()
 
   useEffect(() => {
-    const percussion = new Sampler(samples);
+    const channel = new Channel()
+    channel.connect(Destination)
+    setChannel(channel)
+
+    const analyzer = new Analyser()
+    channel.connect(analyzer)
+    setAnalyzer(analyzer)
+
+    const percussion = new Sampler({C3: A});
     percussion.volume.value = -6;
     const reverb = new Freeverb(0.6, 5000);
     const pingPongDelay = new PingPongDelay({
@@ -94,12 +97,12 @@ export default ({id}) => {
     percussion.volume.value = 0;
     percussion.connect(pingPongDelay);
     pingPongDelay.connect(reverb);
-    reverb.connect(Destination);
+    reverb.connect(channel);
     setPercussion(percussion);
 
-    const violin = new Sampler(violinSamples)
+    const violin = new Sampler({C3: Violin_C3})
     violin.volume.value = 0
-    violin.connect(Destination)
+    violin.connect(channel)
     setViolin(violin)
 
     const bass = new FMSynth(
@@ -141,7 +144,7 @@ export default ({id}) => {
         "modulationIndex": 12.22
       }
     )
-    bass.connect(Destination)
+    bass.connect(channel)
     setBass(bass)
 
 
@@ -159,11 +162,11 @@ export default ({id}) => {
       octaves : 1.5
       }
     )
-    metal.connect(Destination)
+    metal.connect(channel)
     setMetal(metal)
 
     const noise = new NoiseSynth()
-    noise.connect(Destination)
+    noise.connect(channel)
     setNoise(noise)
   }, []);
 
@@ -206,6 +209,7 @@ export default ({id}) => {
       unsubscribe(`${NAME}/${id}/orchestra`)
   });
 
+  // console.log(analyzer ? analyzer.getValue() : "")
   return (
     <Container>
       <Canvas

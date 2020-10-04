@@ -53,16 +53,13 @@ export function createConnection(options: string) {
     client.on("error", console.error)
 
     client.on("message", (messageTopic, message) => {
-        console.log("on message", messageTopic, listeners.size)
         listeners.forEach((listenersForTopic, topic) => {
-            console.log("listener", topic)
             if (
                 messageTopic === topic ||
                 (isWildcardTopic(topic) &&
                     topicMatchesMQTTWildcard(messageTopic, topic))
             ) {
                 listenersForTopic.forEach(listener => {
-                    console.log("listener for topic", topic, listener)
                     try {
                         listener(topic, JSON.parse(message.toString()))
                     } catch (error) {

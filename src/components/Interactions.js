@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styled from "styled-components"
 import Button from '@material-ui/core/Button';
-import {Sampler} from "tone"
+import {Sampler, Gain} from "tone"
 
 import Context from "../Context"
 import ClappingSample from "../assets/clapping.mp3"
@@ -44,16 +44,19 @@ export default () => {
     const [cough, setCough] = useState(null)
     const [walk, setWalk] = useState(null)
     const [dance, setDance] = useState(null)
+    const [gain, setGain] = useState(null)
 
     useEffect(()=>{
+        const gain = new Gain(2)
+        gain.toDestination();
+        setGain(gain)
+
         const clapping = new Sampler({C3: ClappingSample});
-        clapping.toDestination()
-        clapping.volume.value = .2
+        clapping.connect(gain)
         setClap(clapping)
 
         const singAlong = new Sampler({C3: SingAlongSample});
-        singAlong.toDestination()
-        singAlong.volume.value = .2
+        singAlong.connect(gain)
         setSingAlong(singAlong)
 
         const talking = new Sampler({
@@ -62,39 +65,33 @@ export default () => {
             C4: TalkC4Sample,
         });
 
-        talking.toDestination()
-        talking.volume.value = .2
+        talking.connect(gain)
         setTalk(talking)
 
         const enter = new Sampler({C3: EnterSample});
-        enter.toDestination()
-        enter.volume.value = .2
+        enter.connect(gain)
         setEnter(enter)
 
         const photograph = new Sampler({C3: PhotographSample});
-        photograph.toDestination()
-        photograph.volume.value = .2
+        photograph.connect(gain)
         setPhotograph(photograph)
 
         const phone = new Sampler({C3: PhoneSample});
-        phone.toDestination()
-        phone.volume.value = .2
+        phone.connect(gain)
         setPhone(phone)
         
         const walk = new Sampler({C3: WalkSample});
-        walk.toDestination()
-        walk.volume.value = .2
+        walk.connect(gain)
         setWalk(walk)
 
         const sneeze = new Sampler({C3: SneezeSample});
-        sneeze.toDestination()
-        sneeze.volume.value = .2
+        sneeze.connect(gain)
         setSneeze(sneeze)
 
         const cough = new Sampler({C3: CoughSample});
-        cough.toDestination()
-        cough.volume.value = .2
+        cough.connect(gain)
         setCough(cough)
+
         
         const client = getClient();
         client.on("connect", () => {
