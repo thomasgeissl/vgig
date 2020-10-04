@@ -8,20 +8,16 @@ import ClappingSample from "../assets/clapping.mp3"
 import TalkC2Sample from "../assets/talk_C2.mp3"
 import TalkC3Sample from "../assets/talk_C3.mp3"
 import TalkC4Sample from "../assets/talk_C4.mp3"
+import SingAlongSample from "../assets/singAlong.mp3"
 import EnterSample from "../assets/enter.mp3"
 import SneezeSample from "../assets/sneeze.mp3"
+import CoughSample from "../assets/sneeze.mp3"
 import PhotographSample from "../assets/photograph.mp3"
+import PhoneSample from "../assets/phone.mp3"
 import WalkSample from "../assets/walk.mp3"
 import {NAME} from  "../constants"
 import { useClient } from "../mqttConnection"
 
-
-const clappingSamples = {
-    C3: ClappingSample
-}
-const enterSamples = {
-    C3: EnterSample
-}
 
 const Container = styled.div`
 position: absolute;
@@ -32,21 +28,33 @@ height: 100vh;
 background-color: rgba(144,238,144,0.7);
 `
 
+const actions = ['applaude', 'talk', 'photograph', 'walk', 'sneeze', 'cough', 'dance', 'scream', 'sing along', 'phone']
+
 export default () => {
     const [context] = useContext(Context)
     const { subscribe, publish, getClient } = useClient()
     const [enter, setEnter] = useState(null)
-    const [clapping, setClapping] = useState(null)
-    const [talking, setTalking] = useState(null)
+    const [leave, setLeave] = useState(null)
+    const [clap, setClap] = useState(null)
+    const [talk, setTalk] = useState(null)
+    const [singAlong, setSingAlong] = useState(null)
     const [photograph, setPhotograph] = useState(null)
+    const [phone, setPhone] = useState(null)
     const [sneeze, setSneeze] = useState(null)
+    const [cough, setCough] = useState(null)
     const [walk, setWalk] = useState(null)
+    const [dance, setDance] = useState(null)
 
     useEffect(()=>{
-        const clapping = new Sampler(clappingSamples);
+        const clapping = new Sampler({C3: ClappingSample});
         clapping.toDestination()
         clapping.volume.value = .2
-        setClapping(clapping)
+        setClap(clapping)
+
+        const singAlong = new Sampler({C3: SingAlongSample});
+        singAlong.toDestination()
+        singAlong.volume.value = .2
+        setSingAlong(singAlong)
 
         const talking = new Sampler({
             C2: TalkC2Sample,
@@ -56,9 +64,9 @@ export default () => {
 
         talking.toDestination()
         talking.volume.value = .2
-        setTalking(talking)
+        setTalk(talking)
 
-        const enter = new Sampler(enterSamples);
+        const enter = new Sampler({C3: EnterSample});
         enter.toDestination()
         enter.volume.value = .2
         setEnter(enter)
@@ -68,6 +76,11 @@ export default () => {
         photograph.volume.value = .2
         setPhotograph(photograph)
 
+        const phone = new Sampler({C3: PhoneSample});
+        phone.toDestination()
+        phone.volume.value = .2
+        setPhone(phone)
+        
         const walk = new Sampler({C3: WalkSample});
         walk.toDestination()
         walk.volume.value = .2
@@ -78,17 +91,25 @@ export default () => {
         sneeze.volume.value = .2
         setSneeze(sneeze)
 
+        const cough = new Sampler({C3: CoughSample});
+        cough.toDestination()
+        cough.volume.value = .2
+        setCough(cough)
+        
         const client = getClient();
         client.on("connect", () => {
             console.log("client connected")
         })
     }, [])
     useEffect(() => {
-        subscribe(`${NAME}/${context.hallId}/clapping`, (topic, message) => {
-            clapping.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+        subscribe(`${NAME}/${context.hallId}/applaude`, (topic, message) => {
+            clap.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
         })
-        subscribe(`${NAME}/${context.hallId}/talking`, (topic, message) => {
-            talking.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+        subscribe(`${NAME}/${context.hallId}/talk`, (topic, message) => {
+            talk.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+        })
+        subscribe(`${NAME}/${context.hallId}/singAlong`, (topic, message) => {
+            singAlong.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
         })
         subscribe(`${NAME}/${context.hallId}/enter`, (topic, message) => {
             enter.triggerAttackRelease(72, 20)
@@ -100,41 +121,31 @@ export default () => {
         subscribe(`${NAME}/${context.hallId}/photograph`, (topic, message) => {
             photograph.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
         })
+        subscribe(`${NAME}/${context.hallId}/phone`, (topic, message) => {
+            phone.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+        })
         subscribe(`${NAME}/${context.hallId}/walk`, (topic, message) => {
             walk.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
         })
         subscribe(`${NAME}/${context.hallId}/sneeze`, (topic, message) => {
             sneeze.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
         })
-    }, [context.hallId])
+        subscribe(`${NAME}/${context.hallId}/cough`, (topic, message) => {
+            cough.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+        })
+    }, [context.hallId, clap, talk, singAlong, walk, phone, photograph, dance, cough, sneeze, enter, leave])
     
     return (
         <Container>
-            <Button variant="contained" color="primary" onClick={() => {
-                publish(`${NAME}/${context.hallId}/clapping`, {userId: context.userId})
-            }}>
-                clapping
-            </Button>
-            <Button variant="contained" color="primary" onClick={() => {
-                publish(`${NAME}/${context.hallId}/talking`, {userId: context.userId})
-            }}>
-                talking
-            </Button>
-            <Button variant="contained" color="primary" onClick={() => {
-                publish(`${NAME}/${context.hallId}/photograph`, {userId: context.userId})
-            }}>
-                take photo
-            </Button>
-            <Button variant="contained" color="primary" onClick={() => {
-                publish(`${NAME}/${context.hallId}/walk`, {userId: context.userId})
-            }}>
-                walk
-            </Button>
-            <Button variant="contained" color="primary" onClick={() => {
-                publish(`${NAME}/${context.hallId}/sneeze`, {userId: context.userId})
-            }}>
-                sneeze
-            </Button>
+            {actions.map(action => {
+                return (
+                    <Button key={action} variant="contained" color="primary" onClick={() => {
+                        publish(`${NAME}/${context.hallId}/${action}`, {userId: context.userId})
+                    }}>
+                        {action}
+                    </Button>
+                )
+            })}
         </Container>
     )
 }
