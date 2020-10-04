@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef} from "react";
 import styled from "styled-components"
-import { Freeverb, PingPongDelay, Master, Sampler } from "tone";
+import { Freeverb, PingPongDelay, Destination, Sampler, FMSynth, MetalSynth, NoiseSynth } from "tone";
 import {status as statusTypes} from "../midi"
 import A from "../assets/A.mp3"
 import Violin_C3 from "../assets/violin_c3.mp3"
@@ -77,6 +77,9 @@ function Lines({ count, colors }) {
 export default ({id}) => {
   const [percussion, setPercussion] = useState(null);
   const [violin, setViolin] = useState(null);
+  const [bass, setBass] = useState(null);
+  const [metal, setMetal] = useState(null);
+  const [noise, setNoise] = useState(null);
   const { subscribe, unsubscribe } = useClient()
 
   useEffect(() => {
@@ -91,20 +94,85 @@ export default ({id}) => {
     percussion.volume.value = 0;
     percussion.connect(pingPongDelay);
     pingPongDelay.connect(reverb);
-    reverb.connect(Master);
+    reverb.connect(Destination);
     setPercussion(percussion);
 
     const violin = new Sampler(violinSamples)
     violin.volume.value = 0
-    violin.connect(Master)
+    violin.connect(Destination)
     setViolin(violin)
+
+    const bass = new FMSynth(
+      {
+        "volume": 0,
+        "detune": 0,
+        "portamento": 0,
+        "harmonicity": 3,
+        "oscillator": {
+          "partialCount": 0,
+          "partials": [],
+          "phase": 0,
+          "type": "sine"
+        },
+        "envelope": {
+          "attack": 0.01,
+          "attackCurve": "linear",
+          "decay": 0.2,
+          "decayCurve": "exponential",
+          "release": 0.5,
+          "releaseCurve": "exponential",
+          "sustain": 1
+        },
+        "modulation": {
+          "partialCount": 0,
+          "partials": [],
+          "phase": 0,
+          "type": "square"
+        },
+        "modulationEnvelope": {
+          "attack": 0.2,
+          "attackCurve": "linear",
+          "decay": 0.01,
+          "decayCurve": "exponential",
+          "release": 0.5,
+          "releaseCurve": "exponential",
+          "sustain": 1
+        },
+        "modulationIndex": 12.22
+      }
+    )
+    bass.connect(Destination)
+    setBass(bass)
+
+
+    const metal = new MetalSynth( {
+      frequency : 200 ,
+      envelope : {
+      attack : 0.001 ,
+      decay : 1.4 ,
+      release : 0.2
+      }
+      ,
+      harmonicity : 5.1 ,
+      modulationIndex : 32 ,
+      resonance : 4000 ,
+      octaves : 1.5
+      }
+    )
+    metal.connect(Destination)
+    setMetal(metal)
+
+    const noise = new NoiseSynth()
+    noise.connect(Destination)
+    setNoise(noise)
   }, []);
 
   
   useEffect(() => {
     subscribe( `${NAME}/${id}/orchestra`, (topic, message) => {
+      console.log(message)
       const {channel, note, status} = message
-      if(status !== statusTypes.noteOn) return
+      // if(status !== statusTypes.noteOn && status !== statusTypes.noteOff) return
       switch(channel){
         case 1: {
           if(percussion) percussion.triggerAttackRelease(note)
@@ -112,6 +180,21 @@ export default ({id}) => {
         }
         case 2: {
           if(violin) violin.triggerAttackRelease(note)
+          break;
+        }
+        case 3: {
+          if(bass && status === statusTypes.noteOn) bass.triggerAttack(note)
+          if(bass && status === statusTypes.noteOff) bass.triggerRelease(note)
+          break;
+        }
+        case 4: {
+          if(metal && status === statusTypes.noteOn) metal.triggerAttack(note)
+          if(metal && status === statusTypes.noteOff) metal.triggerRelease(note)
+          break;
+        }
+        case 5: {
+          if(noise && status === statusTypes.noteOn) noise.triggerAttack()
+          if(noise && status === statusTypes.noteOff) noise.triggerRelease()
           break;
         }
         default : {
