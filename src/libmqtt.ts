@@ -1,4 +1,4 @@
-import { connect, IClientOptions, MqttClient } from "mqtt"
+import { connect, MqttClient } from "mqtt"
 
 const isWildcardTopic = (topic: string) =>
     topic.includes("#") || topic.includes("+")
