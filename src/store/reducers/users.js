@@ -1,12 +1,10 @@
 const types = {
   ADDUSER: "ADDUSER",
   SETUSERS: "SETUSERS",
-  SETNAME: "SETNAME",
   HEARTBEAT: "HEARTBEAT",
 };
 
 const defaultState = {
-  name: "", //current user name
   users: [], //all users
   heartBeats: new Map(),
 };
@@ -35,7 +33,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         users: users.filter(function(item, pos) {
-          return users.indexOf(item) == pos;
+          return users.indexOf(item) === pos;
         }),
       };
     }
@@ -48,15 +46,6 @@ export default (state = defaultState, action) => {
         ...state,
         users: users.sort(),
       };
-    }
-    case types.SETNAME: {
-      if (!state.users.includes(action.payload.value)) {
-        return {
-          ...state,
-          name: action.payload.value,
-        };
-      }
-      return state;
     }
     default:
       return state;

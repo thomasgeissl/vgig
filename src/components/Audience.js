@@ -81,24 +81,6 @@ export default ({id}) => {
       unsubscribe(`${NAME}/${id}/getUsers`)
   });
     return (
-    //   <Canvas
-    //   style={{ background: 'rgb(0,0,0)' }}
-    //   camera={{ position: [0, 0, 100], fov: 1000 }}
-    // >
-    //          <Lights />
-    //   <mesh receiveShadow>
-    //     <planeBufferGeometry args={[1000, 1000]} />
-    //     <meshStandardMaterial color="#FFACAA" roughness={1} />
-    //   </mesh>
-    //   {/* <Content /> */}
-    //   {
-    //     users.map((user, index) => {
-    //       const position = [index/users.length * 50,0,0]
-    //       return <Sphere key={user} position={position} color={"#002222"}></Sphere>
-    //     })
-    //   }
-    //   {/* <OrbitControls></OrbitControls> */}
-    //   </Canvas>
     <Container>
       {
         users.map((user, index) => {

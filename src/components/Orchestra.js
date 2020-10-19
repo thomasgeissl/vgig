@@ -175,7 +175,7 @@ export default ({id}) => {
       camera={{ position: [0, 0, 10], fov: 25 }}
     >
       <OrbitControls></OrbitControls>
-      <Visualisation analyzer={analyzer}></Visualisation>
+      {/* <Visualisation analyzer={analyzer}></Visualisation> */}
     </Canvas>
     </Container>
   );
