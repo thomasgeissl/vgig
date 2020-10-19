@@ -10,10 +10,6 @@ import {NAME} from  "../constants"
 import { useClient } from "../mqttConnection"
 
 const Container = styled.div`
-    .audience {
-        width: 100%;
-        height: 33%;
-    }
     width: 100%;
     height: 100%;
 `
@@ -23,7 +19,6 @@ export default () => {
     const { publish } = useClient()
 
     useEffect(()=> {
-        console.log("entering")
         setContext({...context, hallId: id})
         publish(`${NAME}/${id}/enter`, {userId: context.userId})
     },[id])

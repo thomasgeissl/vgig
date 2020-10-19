@@ -61,7 +61,7 @@ export default () => {
               if (context.state !== "running") {
                 context.resume();
               }
-              history.push(`halls/${room}`);
+              history.push(`/halls/${room}`);
             }}
           >
             enter

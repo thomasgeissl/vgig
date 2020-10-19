@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useRef} from "react";
 import styled from "styled-components"
 import { Analyser, Freeverb, PingPongDelay, Destination, Sampler, FMSynth, MetalSynth, NoiseSynth, Channel } from "tone";
 import {status as statusTypes} from "../midi"
-import Violin_C3 from "../assets/violin_c3.mp3"
 import UnaCorda_C3 from "../assets/unacorda_C3.mp3"
 import JarbleAmbiencePad_C3 from "../assets/jarbleambiencepad_C3.mp3"
 
@@ -13,11 +12,11 @@ import { OrbitControls } from 'drei'
 
 import { useClient } from "../mqttConnection"
 
-import {NAME} from  "../constants"
+import { NAME } from  "../constants"
 
 const Container = styled.div`
   width: 100%;
-  height: 66%;
+  height: 66.66%;
 `
 
 export default ({id}) => {
@@ -176,7 +175,7 @@ export default ({id}) => {
       camera={{ position: [0, 0, 10], fov: 25 }}
     >
       <OrbitControls></OrbitControls>
-      <Visualisation fftValues={fftValues}></Visualisation>
+      <Visualisation analyzer={analyzer}></Visualisation>
     </Canvas>
     </Container>
   );

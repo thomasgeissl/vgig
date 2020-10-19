@@ -22,12 +22,24 @@ import { useClient } from "../mqttConnection"
 
 
 const Container = styled.div`
-position: absolute;
-top: 0;
-right: 0;
-width: 33.33vw;
-height: 100vh;
-background-color: rgba(144,238,144,0.7);
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 33.33vw;
+    height: 100vh;
+    background-color: rgb(2,24,43); /* Green */
+`
+
+const StyledButton = styled.button`
+    background-color: rgba(68,143,163,1);
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px;
 `
 
 const actions = ['applaude', 'talk', 'photograph', 'walk', 'sneeze', 'cough', 'dance', 'shout', 'singAlong', 'phone']
@@ -124,12 +136,10 @@ export default () => {
             shout.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
         })
         subscribe(`${NAME}/${context.hallId}/singAlong`, (topic, message) => {
-            console.log("singalong")
             singAlong.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
         })
         subscribe(`${NAME}/${context.hallId}/enter`, (topic, message) => {
             enter.triggerAttackRelease(72, 20)
-            console.log("user entered", message)
         })
         subscribe(`${NAME}/${context.hallId}/leave`, (topic, message) => {
             console.log("user left", message)
@@ -156,13 +166,14 @@ export default () => {
     
     return (
         <Container>
+            {/* <span>{context.userId}</span> */}
             {actions.map(action => {
                 return (
-                    <Button key={action} variant="contained" color="primary" onClick={() => {
+                    <StyledButton key={action} variant="outlined" color="primary" onClick={() => {
                         publish(`${NAME}/${context.hallId}/${action}`, {userId: context.userId})
                     }}>
                         {action}
-                    </Button>
+                    </StyledButton>
                 )
             })}
         </Container>
