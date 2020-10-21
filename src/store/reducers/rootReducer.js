@@ -2,10 +2,12 @@ import { combineReducers } from "redux";
 
 import users from "./users";
 import chat from "./chat";
+import console from "./console";
 
 const appReducer = combineReducers({
   users,
   chat,
+  console
 });
 
 export default (state, action) => {

@@ -4,6 +4,7 @@ import styled from "styled-components"
 import Audience from "./Audience"
 import Orchestra from "./Orchestra"
 import Interactions from "./Interactions"
+import Mixer from "./Mixer"
 
 import Context from "../Context"
 import {NAME} from  "../constants"
@@ -29,6 +30,7 @@ export default () => {
             <Orchestra className="orchestra" id={id}></Orchestra>
             <Audience className="audience" id={id}></Audience>
             <Interactions className="interactions" id={id}></Interactions>
+            <Mixer></Mixer>
         </Container>
     )
 }

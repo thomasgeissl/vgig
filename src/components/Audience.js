@@ -10,7 +10,7 @@ import { NAME } from  "../constants"
 import { publish } from '../mqtt'
 import Context from "../Context"
 
-import { addUser, setUsers } from "../store/reducers/users"
+import { addUser, setUsers, heartBeat } from "../store/reducers/users"
 import store from "../store"
 
 import styled from "styled-components"
@@ -69,6 +69,7 @@ export default ({id}) => {
 
       subscribe(`${NAME}/${id}/alive`, (topic, message) => {
         console.log("user is alive", message)
+        dispatch(heartBeat(message.userId))
       })
 
 
@@ -82,7 +83,9 @@ export default ({id}) => {
   });
     return (
     <Container>
+      <h2 style={{marginTop: 0}}>audience</h2>
       {
+
         users.map((user, index) => {
           const position = [index/users.length * 50,0,0]
           return (

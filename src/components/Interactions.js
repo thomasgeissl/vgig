@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useDispatch } from "react-redux"
 import styled from "styled-components"
 import Button from '@material-ui/core/Button';
 import {Sampler, Channel } from "tone"
@@ -20,6 +21,9 @@ import DanceSample from "../assets/dance.mp3"
 import {NAME} from  "../constants"
 import { useClient } from "../mqttConnection"
 
+import Console from "./Console"
+import { addToHistory } from "../store/reducers/console"
+
 
 const Container = styled.div`
     position: absolute;
@@ -28,6 +32,8 @@ const Container = styled.div`
     width: 33.33vw;
     height: 100vh;
     background-color: rgb(2,24,43); /* Green */
+    display: flex;
+    flex-direction: column;
 `
 
 const StyledButton = styled.button`
@@ -60,6 +66,8 @@ export default () => {
     const [walk, setWalk] = useState(null)
     const [dance, setDance] = useState(null)
     const [channel, setChannel] = useState(null)
+    
+    const dispatch = useDispatch()
 
     useEffect(()=>{
         const channel = new Channel(-32)
@@ -128,45 +136,57 @@ export default () => {
     useEffect(() => {
         subscribe(`${NAME}/${context.hallId}/applaude`, (topic, message) => {
             clap.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "applauded"))
         })
         subscribe(`${NAME}/${context.hallId}/talk`, (topic, message) => {
             talk.triggerAttackRelease(20 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "talked"))
         })
         subscribe(`${NAME}/${context.hallId}/shout`, (topic, message) => {
             shout.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "shouted"))
         })
         subscribe(`${NAME}/${context.hallId}/singAlong`, (topic, message) => {
             singAlong.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "sang along"))
         })
         subscribe(`${NAME}/${context.hallId}/enter`, (topic, message) => {
             enter.triggerAttackRelease(72, 20)
+            dispatch(addToHistory(message.userId, "entered"))
         })
         subscribe(`${NAME}/${context.hallId}/leave`, (topic, message) => {
             console.log("user left", message)
+            dispatch(addToHistory(message.userId, "left"))
         })
         subscribe(`${NAME}/${context.hallId}/photograph`, (topic, message) => {
             photograph.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "took a photo"))
         })
         subscribe(`${NAME}/${context.hallId}/phone`, (topic, message) => {
             phone.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "took a phone call"))
         })
         subscribe(`${NAME}/${context.hallId}/walk`, (topic, message) => {
             walk.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "walked"))
         })
         subscribe(`${NAME}/${context.hallId}/dance`, (topic, message) => {
             dance.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "danced"))
         })
         subscribe(`${NAME}/${context.hallId}/sneeze`, (topic, message) => {
             sneeze.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "sneezed"))
         })
         subscribe(`${NAME}/${context.hallId}/cough`, (topic, message) => {
             cough.triggerAttackRelease(50 + Math.round(Math.random()*60), 20)
+            dispatch(addToHistory(message.userId, "coughed"))
         })
     }, [context.hallId, clap, talk, singAlong, walk, phone, photograph, dance, cough, sneeze, enter, leave])
     
     return (
         <Container>
-            {/* <span>{context.userId}</span> */}
+            <div>
             {actions.map(action => {
                 return (
                     <StyledButton key={action} variant="outlined" color="primary" onClick={() => {
@@ -176,6 +196,8 @@ export default () => {
                     </StyledButton>
                 )
             })}
+            </div>
+            <Console></Console>
         </Container>
     )
 }

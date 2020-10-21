@@ -12,11 +12,12 @@ const defaultState = {
 export default (state = defaultState, action) => {
   switch (action.type) {
     case types.HEARTBEAT: {
+      console.log("heartbeat")
       let heartBeats = new Map(state.heartBeats);
       let users = [...state.users];
       heartBeats.set(action.payload.value, Date.now());
       heartBeats.forEach((value, key) => {
-        if (Date.now() > value + 10 * 1000) {
+        if (Date.now() > value + 30 * 1000) {
           heartBeats.delete(key);
           const index = users.indexOf(key);
           if (index !== -1) users.splice(index, 1);
@@ -68,14 +69,7 @@ export const addUser = (value) => {
     },
   };
 };
-export const setName = (value) => {
-  return {
-    type: types.SETNAME,
-    payload: {
-      value,
-    },
-  };
-};
+
 export const heartBeat = (value) => {
   return {
     type: types.HEARTBEAT,
