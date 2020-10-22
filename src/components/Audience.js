@@ -18,7 +18,7 @@ import styled from "styled-components"
 const Container = styled.div`
   background-color: #448FA3;
   height: 33.33vh;
-  width: 100%;
+  width: 66.66%;
 `
 
 const User = styled.div`

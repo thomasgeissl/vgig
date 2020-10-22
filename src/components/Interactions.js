@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import Button from '@material-ui/core/Button';
-import {Sampler, Channel } from "tone"
+import { Sampler, Channel, Volume, Destination } from "tone"
 
 import Context from "../Context"
 import ClappingSample from "../assets/clapping.mp3"
@@ -50,6 +50,9 @@ const StyledButton = styled.button`
 
 const actions = ['applaude', 'talk', 'photograph', 'walk', 'sneeze', 'cough', 'dance', 'shout', 'singAlong', 'phone']
 
+const volumeNode = new Volume(-100)
+volumeNode.connect(Destination)
+
 export default () => {
     const [context] = useContext(Context)
     const { subscribe, publish, getClient } = useClient()
@@ -66,12 +69,21 @@ export default () => {
     const [walk, setWalk] = useState(null)
     const [dance, setDance] = useState(null)
     const [channel, setChannel] = useState(null)
+    // const [volume, setVolume] = useState(null)
     
     const dispatch = useDispatch()
+    const volume = useSelector(state => state.mixer.volumeInteractions)
+    if(channel){
+        volumeNode.volume.value = volume
+        // channel.volume.value = volume
+    }
 
     useEffect(()=>{
         const channel = new Channel(-32)
-        channel.toDestination();
+        channel.connect(volumeNode)
+        // channel.volume.value = 0;
+        // channel.toDestination();
+        // channel.mute = true;
         setChannel(channel)
 
         const clapping = new Sampler({C3: ClappingSample});
@@ -129,9 +141,7 @@ export default () => {
 
         
         const client = getClient();
-        client.on("connect", () => {
-            console.log("client connected")
-        })
+        client.on("connect", () => {})
     }, [])
     useEffect(() => {
         subscribe(`${NAME}/${context.hallId}/applaude`, (topic, message) => {

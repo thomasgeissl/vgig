@@ -1,11 +1,13 @@
 import { combineReducers } from "redux";
 
 import users from "./users";
+import mixer from "./mixer";
 import chat from "./chat";
 import console from "./console";
 
 const appReducer = combineReducers({
   users,
+  mixer,
   chat,
   console
 });

@@ -15,7 +15,7 @@ import { useClient } from "../mqttConnection"
 import { NAME } from  "../constants"
 
 const Container = styled.div`
-  width: 100%;
+  width: 66.66%;
   height: 66.66%;
 `
 
@@ -131,7 +131,6 @@ export default ({id}) => {
   
   useEffect(() => {
     subscribe( `${NAME}/${id}/orchestra`, (topic, message) => {
-      console.log(message)
       const {channel, note, status} = message
       // if(status !== statusTypes.noteOn && status !== statusTypes.noteOff) return
       switch(channel){
@@ -175,7 +174,7 @@ export default ({id}) => {
       camera={{ position: [0, 0, 10], fov: 25 }}
     >
       <OrbitControls></OrbitControls>
-      {/* <Visualisation analyzer={analyzer}></Visualisation> */}
+      <Visualisation analyzer={analyzer}></Visualisation>
     </Canvas>
     </Container>
   );
