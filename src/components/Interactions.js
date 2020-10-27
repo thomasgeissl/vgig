@@ -22,6 +22,7 @@ import {NAME} from  "../constants"
 import { useClient } from "../mqttConnection"
 
 import Console from "./Console"
+import Chat from "./Chat"
 import { addToHistory } from "../store/reducers/console"
 
 
@@ -49,16 +50,22 @@ const StyledButton = styled.button`
 `
 
 const actions = ['applaude', 'talk', 'photograph', 'walk', 'sneeze', 'cough', 'dance', 'shout', 'singAlong', 'phone']
+const panels = { CHAT: 'CHAT', CONSOLE: 'CONSOLE'}
 
-const volumeNode = new Volume(-100)
+const channel = new Channel(-32)
+const volumeNode = new Volume(0)
+channel.connect(volumeNode)
 volumeNode.connect(Destination)
+
+const clapping = new Sampler({C3: ClappingSample});
+clapping.connect(channel)
 
 export default () => {
     const [context] = useContext(Context)
+    const [activePanel, setActivePanel] = useState(panels.CHAT)
     const { subscribe, publish, getClient } = useClient()
     const [enter, setEnter] = useState(null)
     const [leave, setLeave] = useState(null)
-    const [clap, setClap] = useState(null)
     const [talk, setTalk] = useState(null)
     const [shout, setShout] = useState(null)
     const [singAlong, setSingAlong] = useState(null)
@@ -68,27 +75,18 @@ export default () => {
     const [cough, setCough] = useState(null)
     const [walk, setWalk] = useState(null)
     const [dance, setDance] = useState(null)
-    const [channel, setChannel] = useState(null)
+    // const [channel, setChannel] = useState(null)
     // const [volume, setVolume] = useState(null)
     
     const dispatch = useDispatch()
     const volume = useSelector(state => state.mixer.volumeInteractions)
     if(channel){
-        volumeNode.volume.value = volume
-        // channel.volume.value = volume
+        // volumeNode.volume.value = volume
+        channel.volume.value = volume
     }
 
     useEffect(()=>{
-        const channel = new Channel(-32)
-        channel.connect(volumeNode)
-        // channel.volume.value = 0;
-        // channel.toDestination();
-        // channel.mute = true;
-        setChannel(channel)
 
-        const clapping = new Sampler({C3: ClappingSample});
-        clapping.connect(channel)
-        setClap(clapping)
 
         const singAlong = new Sampler({C3: SingAlongSample});
         singAlong.connect(channel)
@@ -145,7 +143,7 @@ export default () => {
     }, [])
     useEffect(() => {
         subscribe(`${NAME}/${context.hallId}/applaude`, (topic, message) => {
-            clap.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
+            clapping.triggerAttackRelease(40 + Math.round(Math.random()*60), 20)
             dispatch(addToHistory(message.userId, "applauded"))
         })
         subscribe(`${NAME}/${context.hallId}/talk`, (topic, message) => {
@@ -192,7 +190,7 @@ export default () => {
             cough.triggerAttackRelease(50 + Math.round(Math.random()*60), 20)
             dispatch(addToHistory(message.userId, "coughed"))
         })
-    }, [context.hallId, clap, talk, singAlong, walk, phone, photograph, dance, cough, sneeze, enter, leave])
+    }, [context.hallId, talk, singAlong, walk, phone, photograph, dance, cough, sneeze, enter, leave])
     
     return (
         <Container>
@@ -207,7 +205,12 @@ export default () => {
                 )
             })}
             </div>
-            <Console></Console>
+            <div>
+                <button onClick={event => {setActivePanel(panels.CONSOLE)}}>console</button>
+                <button onClick={event => {setActivePanel(panels.CHAT)}}>chat</button>
+            </div>
+            {activePanel === panels.CONSOLE && <Console></Console>}
+            {activePanel === panels.CHAT && <Chat></Chat>}
         </Container>
     )
 }
