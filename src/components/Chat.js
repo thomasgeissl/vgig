@@ -15,6 +15,10 @@ import Section from "./Section";
 
 const Container = styled.div`
   width: 33vw;
+  @media only screen and (max-width: 600px) {
+    width: 100vw;
+  }
+
   height: 50vh;
   position: absolute;
   top: 0;
