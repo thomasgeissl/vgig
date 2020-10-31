@@ -8,6 +8,12 @@ import { NAME } from "../constants";
 import Context from "../Context";
 
 const Container = styled.div``;
+const Actions = styled.section`
+  margin-top: 24px !important;
+  display: flex;
+  flex-direction: row-reverse;
+`;
+const EnterButton = styled(Button)``;
 
 export default ({ onEnter }) => {
   const { subscribe, publish, getClient } = useClient();
@@ -15,8 +21,12 @@ export default ({ onEnter }) => {
   const [context] = useContext(Context);
   return (
     <Container>
-      <div>hello, please enter your name and enjoy the show.</div>
+      <div>
+        hello, <br></br>please enter your name and enjoy the show.
+      </div>
       <TextField
+        fullWidth
+        label="name"
         value={name}
         onChange={(event) => {
           setName(event.target.value);
@@ -32,18 +42,24 @@ export default ({ onEnter }) => {
           }
         }}
       ></TextField>
-      <Button
-        onClick={() => {
-          publish(`${NAME}/${context.hallId}/setUserName`, {
-            id: context.userId,
-            name,
-          });
-          setName("");
-          onEnter(name);
-        }}
-      >
-        enter
-      </Button>
+      <br></br>
+
+      <Actions>
+        <EnterButton
+          color="primary"
+          variant="outlined"
+          onClick={() => {
+            publish(`${NAME}/${context.hallId}/setUserName`, {
+              id: context.userId,
+              name,
+            });
+            setName("");
+            onEnter(name);
+          }}
+        >
+          enter
+        </EnterButton>
+      </Actions>
     </Container>
   );
 };
