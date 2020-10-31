@@ -32,7 +32,7 @@ export default ({ onEnter }) => {
           setName(event.target.value);
         }}
         onKeyPress={(event) => {
-          if (event.key === "Enter") {
+          if (event.key === "Enter" && name !== "") {
             publish(`${NAME}/${context.hallId}/setUserName`, {
               id: context.userId,
               name,
@@ -49,6 +49,7 @@ export default ({ onEnter }) => {
           color="primary"
           variant="outlined"
           onClick={() => {
+            if (name === "") return;
             publish(`${NAME}/${context.hallId}/setUserName`, {
               id: context.userId,
               name,
