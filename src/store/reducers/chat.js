@@ -10,7 +10,11 @@ export default (state = defaultState, action) => {
   switch (action.type) {
     case types.ADDMESSAGE: {
       let messages = [...state.messages];
-      messages.unshift(action.payload.message);
+      messages.unshift({
+        ...action.payload.message,
+        time: new Date(),
+        type: "CHAT",
+      });
       messages = messages.splice(0, 100);
       return {
         ...state,
@@ -22,12 +26,12 @@ export default (state = defaultState, action) => {
   }
 };
 
-export const addMessage = (sender, text) => {
+export const addMessage = (user, text) => {
   return {
     type: types.ADDMESSAGE,
     payload: {
       message: {
-        sender,
+        user,
         text,
       },
     },

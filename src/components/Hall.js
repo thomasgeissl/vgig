@@ -19,6 +19,8 @@ import { NAME } from "../constants";
 import { useClient } from "../mqttConnection";
 
 import { setName } from "../store/reducers/users";
+import { addMessage } from "../store/reducers/chat";
+
 import Console from "./Console";
 import Chat from "./Chat";
 
@@ -63,6 +65,9 @@ export default () => {
     subscribe(`${NAME}/${id}/setUserName`, (topic, message) => {
       dispatch(setName(message.id, message.name));
     });
+    subscribe(`${NAME}/${id}/chat`, (topic, message) => {
+      dispatch(addMessage(message.user, message.message));
+    });
     // publish(`${NAME}/${id}/getUsers`, { from: context.userId });
     // setInterval(() => {
     //   publish(`${NAME}/${id}/alive`, { userId: context.userId });
@@ -96,7 +101,6 @@ export default () => {
           ></Lobby>
         </ModalContent>
       </StyledModal>
-      {/* {!open && ( */}
       <>
         <Orchestra className="orchestra" id={id}></Orchestra>
         <Audience className="audience" id={id}></Audience>

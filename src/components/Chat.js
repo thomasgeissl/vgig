@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import TextField from "@material-ui/core/TextField";
+import SendIcon from "@material-ui/icons/Send";
 import { compareAsc, format } from "date-fns";
 import { useClient } from "../mqttConnection";
 
-import { addMessage } from "../store/reducers/chat";
 import Section from "./Section";
 
 const Container = styled.div`
@@ -44,37 +46,83 @@ const List = styled.ul`
 
 export default () => {
   const [message, setMessage] = useState("");
+  const [showChatMessages, setShowChatMessages] = useState(true);
+  const [showSystemMessages, setShowSystemMessages] = useState(false);
   const history = useSelector((state) => state.console.history);
+  const messages = useSelector((state) => state.chat.messages);
+
+  const allMessages = [...history, ...messages].sort((x, y) => x.time < y.time);
   const [context] = useContext(Context);
   const dispatch = useDispatch();
-  const messages = useSelector((state) => state.chat.messages);
   const users = useSelector((state) => state.users.users);
   const { subscribe, publish, getClient } = useClient();
-  useEffect(() => {
-    if (context.userId && context.hallId) {
-      subscribe(`vgig/${context.hallId}/chat`, (topic, message) => {
-        dispatch(addMessage(message.sender, message.message));
-      });
-    }
-  }, [context]);
+
+  const List = styled.ul`
+    list-style-type: none;
+  `;
+
+  const ChatMessage = styled.li``;
+  const SystemMessage = styled.li`
+    font-style: italic;
+    text-align: right;
+  `;
+
   return (
     <Container>
       <Section title={"chat/console"} color={"rgb(46, 94, 160)"}>
-        <ul>
-          {messages.map((message, index) => {
+        <FormControlLabel
+          control={
+            <Switch
+              checked={showChatMessages}
+              onChange={(event) => {
+                setShowChatMessages(event.target.checked);
+              }}
+              color="primary"
+            />
+          }
+          label="chat messages"
+        />
+
+        <FormControlLabel
+          control={
+            <Switch
+              checked={showSystemMessages}
+              onChange={(event) => {
+                setShowSystemMessages(event.target.checked);
+              }}
+              color="primary"
+            />
+          }
+          label="system messages"
+        />
+
+        <List>
+          {allMessages.map((message, index) => {
             let name;
             users.forEach((user) => {
-              if (user.id === message.sender) name = user.name;
+              if (user.id === message.user) name = user.name;
             });
             return (
-              <li key={index}>
-                {name}: {message.text}
-              </li>
+              <>
+                {message.type === "CHAT" && showChatMessages && (
+                  <ChatMessage key={index}>
+                    {name}: {message.text}
+                  </ChatMessage>
+                )}
+                {message.type === "SYSTEM" && showSystemMessages && (
+                  <SystemMessage key={index}>
+                    {context.hallId}: {name} {message.text}
+                  </SystemMessage>
+                )}
+              </>
             );
           })}
-        </ul>
+        </List>
         <Input>
-          <Grid container spacing={2}>
+          <Grid
+            container
+            //   spacing={2}
+          >
             <Grid item xs={9}>
               <TextField
                 fullWidth
@@ -84,7 +132,7 @@ export default () => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
                     publish(`vgig/${context.hallId}/chat`, {
-                      sender: context.userId,
+                      user: context.userId,
                       message: message,
                     });
                     setMessage("");
@@ -95,19 +143,19 @@ export default () => {
             <Grid item xs={3}>
               <Button
                 color="primary"
-                variant="outlined"
+                // variant="outlined"
                 fullWidth
                 onClick={(event) => {
                   if (message !== "") {
                     publish(`vgig/${context.hallId}/chat`, {
-                      sender: context.userId,
+                      user: context.userId,
                       message: message,
                     });
                   }
                   setMessage("");
                 }}
               >
-                send
+                <SendIcon></SendIcon>
               </Button>
             </Grid>
           </Grid>
