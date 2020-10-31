@@ -5,6 +5,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 // import { OrbitControls } from 'drei'
 // import { Canvas } from 'react-three-fiber'
 // import { useSprings, a } from 'react-spring/three'
+import styled from "styled-components";
 import { useClient } from "../mqttConnection";
 import { NAME } from "../constants";
 import { publish } from "../mqtt";
@@ -13,18 +14,21 @@ import Context from "../Context";
 import { addUser, setUsers, heartBeat } from "../store/reducers/users";
 import store from "../store";
 
-import styled from "styled-components";
+import Section from "./Section";
 
 const Container = styled.div`
-  background-color: #448fa3;
-  height: 33.33vh;
-  width: 66.66%;
+  margin-top: 16px;
+  margin-bottom: 16px;
 `;
 
+const Users = styled.div`
+  text-align: left;
+`;
 const User = styled.div`
   height: 25px;
   width: 25px;
-  background-color: ${(props) => (props.active ? "#0197F6" : "#E2D388")};
+  background-color: ${(props) =>
+    props.active ? "rgb(255,170,100)" : "rgb(254, 250, 170)"};
   border-radius: 50%;
   display: inline-block;
   margin: 5px;
@@ -81,17 +85,20 @@ export default ({ id }) => {
   );
   return (
     <Container>
-      <h2 style={{ marginTop: 0 }}>audience</h2>
-      {users.map((user, index) => {
-        const position = [(index / users.length) * 50, 0, 0];
-        return (
-          <Tooltip key={user.id} title={user.name} placement="right-start">
-            <User key={user.id} active={context.userId === user.id}>
-              {/* {user} */}
-            </User>
-          </Tooltip>
-        );
-      })}
+      {/* <Section title={"audience"} color={"rgb(46, 94, 160)"}> */}
+      <Users>
+        {users.map((user, index) => {
+          const position = [(index / users.length) * 50, 0, 0];
+          return (
+            <Tooltip key={user.id} title={user.name} placement="right-start">
+              <User key={user.id} active={context.userId === user.id}>
+                {/* {user} */}
+              </User>
+            </Tooltip>
+          );
+        })}
+      </Users>
+      {/* </Section> */}
     </Container>
   );
 };

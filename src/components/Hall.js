@@ -1,7 +1,12 @@
 import React, { useEffect, useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import AppBar from "@material-ui/core/AppBar";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import Modal from "@material-ui/core/Modal";
+import Toolbar from "@material-ui/core/Toolbar";
+import ForumIcon from "@material-ui/icons/Forum";
 import styled from "styled-components";
 import Audience from "./Audience";
 import Lobby from "./Lobby";
@@ -14,6 +19,8 @@ import { NAME } from "../constants";
 import { useClient } from "../mqttConnection";
 
 import { setName } from "../store/reducers/users";
+import Console from "./Console";
+import Chat from "./Chat";
 
 const Container = styled.div`
   width: 100%;
@@ -32,12 +39,21 @@ const ModalContent = styled.div`
   width: 100%;
   height: 100%;
 `;
+
+const StyledChat = styled(Chat)`
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 33vw;
+`;
+const panels = { CHAT: "CHAT", CONSOLE: "CONSOLE" };
 export default () => {
   const { id } = useParams();
   const [context, setContext] = useContext(Context);
   const { publish, subscribe } = useClient();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(true);
+  const [showConsole, setShowConsole] = useState(false);
 
   useEffect(() => {
     setContext({ ...context, hallId: id });
@@ -55,6 +71,18 @@ export default () => {
 
   return (
     <Container>
+      <AppBar position="sticky" style={{ backgroundColor: "transparent" }}>
+        <Toolbar>
+          <IconButton
+            color="primary"
+            onClick={(event) => {
+              setShowConsole(!showConsole);
+            }}
+          >
+            <ForumIcon></ForumIcon>
+          </IconButton>
+        </Toolbar>
+      </AppBar>
       <StyledModal open={open}>
         <ModalContent>
           <Lobby
@@ -72,10 +100,16 @@ export default () => {
       <>
         <Orchestra className="orchestra" id={id}></Orchestra>
         <Audience className="audience" id={id}></Audience>
-        <Interactions className="interactions" id={id}></Interactions>
-        <Mixer></Mixer>
+        <Grid container>
+          <Grid item xs={12} sm={8}>
+            <Interactions className="interactions" id={id}></Interactions>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Mixer></Mixer>
+          </Grid>
+        </Grid>
+        {showConsole && <StyledChat></StyledChat>}
       </>
-      {/* )} */}
     </Container>
   );
 };

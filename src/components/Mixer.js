@@ -1,58 +1,59 @@
-import React from "react"
-import { useDispatch } from "react-redux"
-import Slider from '@material-ui/core/Slider';
-import styled from "styled-components"
+import React from "react";
+import { useDispatch } from "react-redux";
+import Grid from "@material-ui/core/Grid";
+import Slider from "@material-ui/core/Slider";
+import styled from "styled-components";
 
-import { setVolumeInteractions } from "../store/reducers/mixer"
+import { setVolumeInteractions } from "../store/reducers/mixer";
+import Section from "./Section";
 
 const Container = styled.div`
-width: 25%;
-height: 25%;
-background-color: lightblue;
-position: absolute;
-bottom: 0;
-left: 37.5%;
-display: flex;
-flex-direction: row;
-`
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+`;
 
 const StyledSlider = styled(Slider)`
   height: 50px !important;
-  `
+`;
 
 export default () => {
-  const dispatch = useDispatch()
-    return (
-        <Container>
-            {/* <h2>mixer</h2> */}
-            <div style={{marginRight: "15px"}}>
-              <h3>light</h3>
-            </div>
-            <div>
-              <h3>audio</h3>
+  const dispatch = useDispatch();
+  return (
+    <Container>
+      <Grid container>
+        <Grid item xs={6}>
+          <Section title={"light"} color={"rgb(220, 46, 40)"}></Section>
+        </Grid>
+        <Grid item xs={6}>
+          <Section title={"audio"} color={"rgb(220, 46, 40)"}>
             <StyledSlider
-          orientation="vertical"
-        //   getAriaValueText={valuetext}
-          defaultValue={-100}
-          min={-100}
-          max={0}
-          onChange={(event, value) => {
-            dispatch(setVolumeInteractions(value))
-          }}
-          aria-labelledby="vertical-slider"
-        />
-                    <StyledSlider
-          orientation="vertical"
-        //   getAriaValueText={valuetext}
-          defaultValue={-100}
-          min={-100}
-          max={0}
-          onChange={(event, value) => {
-            // dispatch(setVolumeInteractions(value))
-          }}
-          aria-labelledby="vertical-slider"
-        />
-            </div>
-        </Container>
-    )
-}
+              orientation="vertical"
+              //   getAriaValueText={valuetext}
+              defaultValue={-100}
+              min={-100}
+              max={0}
+              onChange={(event, value) => {
+                dispatch(setVolumeInteractions(value));
+              }}
+              aria-labelledby="vertical-slider"
+            />
+            <StyledSlider
+              orientation="vertical"
+              //   getAriaValueText={valuetext}
+              defaultValue={-100}
+              min={-100}
+              max={0}
+              onChange={(event, value) => {
+                // dispatch(setVolumeInteractions(value))
+              }}
+              aria-labelledby="vertical-slider"
+            />
+          </Section>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};

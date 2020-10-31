@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import MUIButton from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
 import { Sampler, Channel, Volume, Destination } from "tone";
 
 import Context from "../Context";
@@ -21,31 +22,15 @@ import DanceSample from "../assets/dance.mp3";
 import { NAME } from "../constants";
 import { useClient } from "../mqttConnection";
 
-import Console from "./Console";
-import Chat from "./Chat";
 import { addToHistory } from "../store/reducers/console";
 
+import Button from "./Button";
+import Section from "./Section";
+
 const Container = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 33.33vw;
-  height: 100vh;
-  background-color: rgb(2, 24, 43); /* Green */
+  background-color: black;
   display: flex;
   flex-direction: column;
-`;
-
-const StyledButton = styled.button`
-  background-color: rgba(68, 143, 163, 1);
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 5px;
 `;
 
 const actions = [
@@ -60,7 +45,6 @@ const actions = [
   "singAlong",
   "phone",
 ];
-const panels = { CHAT: "CHAT", CONSOLE: "CONSOLE" };
 
 const channel = new Channel(-32);
 const volumeNode = new Volume(0);
@@ -72,7 +56,6 @@ clapping.connect(channel);
 
 export default () => {
   const [context] = useContext(Context);
-  const [activePanel, setActivePanel] = useState(panels.CHAT);
   const { subscribe, publish, getClient } = useClient();
   const [enter, setEnter] = useState(null);
   const [leave, setLeave] = useState(null);
@@ -213,42 +196,27 @@ export default () => {
 
   return (
     <Container>
-      <div>
-        {actions.map((action) => {
-          return (
-            <StyledButton
-              key={action}
-              variant="outlined"
-              color="primary"
-              onClick={() => {
-                publish(`${NAME}/${context.hallId}/${action}`, {
-                  userId: context.userId,
-                });
-              }}
-            >
-              {action}
-            </StyledButton>
-          );
-        })}
-      </div>
-      <div>
-        <button
-          onClick={(event) => {
-            setActivePanel(panels.CONSOLE);
-          }}
-        >
-          console
-        </button>
-        <button
-          onClick={(event) => {
-            setActivePanel(panels.CHAT);
-          }}
-        >
-          chat
-        </button>
-      </div>
-      {activePanel === panels.CONSOLE && <Console></Console>}
-      {activePanel === panels.CHAT && <Chat></Chat>}
+      <Section title={"actions"} color={"rgb(46, 94, 160)"}>
+        <Grid container>
+          {actions.map((action) => {
+            return (
+              <Grid item xs={2}>
+                <Button
+                  key={action}
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => {
+                    publish(`${NAME}/${context.hallId}/${action}`, {
+                      userId: context.userId,
+                    });
+                  }}
+                  label={action}
+                ></Button>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Section>
     </Container>
   );
 };
