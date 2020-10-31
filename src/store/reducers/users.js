@@ -2,6 +2,7 @@ const types = {
   ADDUSER: "ADDUSER",
   SETUSERS: "SETUSERS",
   HEARTBEAT: "HEARTBEAT",
+  SETNAME: "SETNAME",
 };
 
 const defaultState = {
@@ -12,7 +13,6 @@ const defaultState = {
 export default (state = defaultState, action) => {
   switch (action.type) {
     case types.HEARTBEAT: {
-      console.log("heartbeat")
       let heartBeats = new Map(state.heartBeats);
       let users = [...state.users];
       heartBeats.set(action.payload.value, Date.now());
@@ -30,22 +30,52 @@ export default (state = defaultState, action) => {
       };
     }
     case types.SETUSERS: {
-      let users = [...state.users, ...action.payload.value].sort()
+      let users = [...state.users];
+      action.payload.value.forEach((item) => {
+        let userAlreadyExists = false;
+        users.forEach((user) => {
+          if (user.id === item.id) {
+            userAlreadyExists = true;
+          }
+        });
+        if (!userAlreadyExists) users.push(item);
+      });
+
       return {
         ...state,
-        users: users.filter(function(item, pos) {
-          return users.indexOf(item) === pos;
+        users: users.sort((x, y) => {
+          return x.id < y.id;
         }),
       };
     }
     case types.ADDUSER: {
       let users = [...state.users];
-      if (!users.includes(action.payload.value)) {
-        users.push(action.payload.value);
-      }
+      let userAlreadyExists = false;
+      users.forEach((user) => {
+        if (user.id === action.payload.id) {
+          userAlreadyExists = true;
+        }
+      });
+      if (!userAlreadyExists)
+        users.push({ id: action.payload.id, name: action.payload.name });
       return {
         ...state,
-        users: users.sort(),
+        users: users.sort((x, y) => {
+          return x.id < y.id;
+        }),
+      };
+    }
+    case types.SETNAME: {
+      let users = [...state.users];
+      users.forEach((user, index) => {
+        if (user.id === action.payload.id) {
+          // user.name = action.payload.name;
+          users[index].name = action.payload.name;
+        }
+      });
+      return {
+        ...state,
+        users,
       };
     }
     default:
@@ -61,11 +91,12 @@ export const setUsers = (value) => {
     },
   };
 };
-export const addUser = (value) => {
+export const addUser = (id, name) => {
   return {
     type: types.ADDUSER,
     payload: {
-      value,
+      id,
+      name,
     },
   };
 };
@@ -75,6 +106,15 @@ export const heartBeat = (value) => {
     type: types.HEARTBEAT,
     payload: {
       value,
+    },
+  };
+};
+export const setName = (id, name) => {
+  return {
+    type: types.SETNAME,
+    payload: {
+      id,
+      name,
     },
   };
 };
