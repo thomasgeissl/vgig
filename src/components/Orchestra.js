@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { Provider as StoreProvider } from "react-redux";
 import styled from "styled-components";
 import {
   Analyser,
@@ -16,12 +17,16 @@ import UnaCorda_C3 from "../assets/unacorda_C3.mp3";
 import JarbleAmbiencePad_C3 from "../assets/jarbleambiencepad_C3.mp3";
 
 import Visualisation from "./Visualisation";
+import Lights from "./visualisation/Lights";
 import { Canvas } from "react-three-fiber";
 import { OrbitControls } from "drei";
 
 import { useClient } from "../mqttConnection";
 
 import { NAME } from "../constants";
+
+import PostProcessing from "./visualisation/PostProcessing";
+import store from "../store";
 
 const Container = styled.div`
   width: 100%;
@@ -181,10 +186,16 @@ export default ({ id }) => {
     <Container>
       <Canvas
         style={{ background: "rgb(0,0,0)" }}
-        camera={{ position: [0, 0, 10], fov: 25 }}
+        camera={{ position: [0, 0, 10], fov: 45 }}
+        colorManagement
       >
         <OrbitControls></OrbitControls>
+        <Lights></Lights>
+
         <Visualisation analyzer={analyzer}></Visualisation>
+        <StoreProvider store={store}>
+          <PostProcessing></PostProcessing>
+        </StoreProvider>
       </Canvas>
     </Container>
   );

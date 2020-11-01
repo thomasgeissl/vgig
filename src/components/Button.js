@@ -12,8 +12,8 @@ const RoundButton = styled.button`
   background-color: rgba(254, 250, 170, 1);
   border: none;
   color: white;
-  height: 50px;
-  width: 50px;
+  height: 32px;
+  width: 32px;
   text-align: center;
   text-decoration: none;
   display: inline-block;

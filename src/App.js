@@ -1,5 +1,5 @@
 import React from "react";
-import { Provider } from "react-redux";
+import { Provider as StoreProvider } from "react-redux";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import styled from "styled-components";
 
@@ -20,7 +20,7 @@ export default () => {
   return (
     <App>
       <ThemeProvider theme={theme}>
-        <Provider store={store}>
+        <StoreProvider store={store}>
           <Router>
             <Switch>
               <Route path="/halls/:id">
@@ -33,7 +33,7 @@ export default () => {
               </Route>
             </Switch>
           </Router>
-        </Provider>
+        </StoreProvider>
       </ThemeProvider>
     </App>
   );

@@ -198,9 +198,9 @@ export default () => {
     <Container>
       <Section title={"actions"} color={"rgb(46, 94, 160)"}>
         <Grid container>
-          {actions.map((action) => {
+          {actions.map((action, index) => {
             return (
-              <Grid item xs={2}>
+              <Grid item xs={2} key={index}>
                 <Button
                   key={action}
                   variant="outlined"
