@@ -26,25 +26,13 @@ import { addToHistory } from "../store/reducers/console";
 
 import Button from "./Button";
 import Section from "./Section";
+import actions from "../config/actions";
 
 const Container = styled.div`
   background-color: black;
   display: flex;
   flex-direction: column;
 `;
-
-const actions = [
-  "applaude",
-  "talk",
-  "photograph",
-  "walk",
-  "sneeze",
-  "cough",
-  "dance",
-  "shout",
-  "singAlong",
-  "phone",
-];
 
 const channel = new Channel(-32);
 const volumeNode = new Volume(0);
@@ -202,15 +190,15 @@ export default () => {
             return (
               <Grid item xs={2} key={index}>
                 <Button
-                  key={action}
+                  key={action.id}
                   variant="outlined"
                   color="primary"
                   onClick={() => {
-                    publish(`${NAME}/${context.hallId}/${action}`, {
+                    publish(`${NAME}/${context.hallId}/${action.id}`, {
                       userId: context.userId,
                     });
                   }}
-                  label={action}
+                  label={action.label}
                 ></Button>
               </Grid>
             );

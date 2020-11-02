@@ -13,7 +13,6 @@ import { GlitchMode } from "postprocessing";
 
 export default () => {
   const glitch = useSelector((state) => state.mixer.glitch);
-  console.log(glitch);
   return (
     <EffectComposer>
       <DepthOfField

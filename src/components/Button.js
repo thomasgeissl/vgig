@@ -25,10 +25,10 @@ const Label = styled.span`
   color: white;
 `;
 
-const Button = ({ label, onClick }) => {
+const Button = ({ label, borderColor, onClick }) => {
   return (
     <Container>
-      <RoundButton onClick={onClick}></RoundButton>
+      <RoundButton onClick={onClick} borderColor={borderColor}></RoundButton>
       <br></br>
       <Label>{label}</Label>
     </Container>
