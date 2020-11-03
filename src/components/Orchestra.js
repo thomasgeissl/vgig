@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, useReducer } from "react";
-import { Provider as StoreProvider } from "react-redux";
+import { Provider as StoreProvider, useSelector } from "react-redux";
 import styled from "styled-components";
 import {
   Analyser,
@@ -78,6 +78,11 @@ export default ({ id }) => {
   const [subscribed, setSubscribed] = useState(false);
 
   const { subscribe, unsubscribe } = useClient();
+  const volume = useSelector((state) => state.mixer.volumeStage);
+  if (channel) {
+    // volumeNode.volume.value = volume
+    channel.volume.value = volume;
+  }
 
   useEffect(() => {
     const channel = new Channel(-32);

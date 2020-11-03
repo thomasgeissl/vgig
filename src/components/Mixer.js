@@ -1,10 +1,10 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/core/Slider";
 import styled from "styled-components";
 
-import { setVolumeInteractions } from "../store/reducers/mixer";
+import { setVolumeInteractions, setVolumeStage } from "../store/reducers/mixer";
 import Section from "./Section";
 import Button from "./Button";
 
@@ -22,6 +22,10 @@ const StyledSlider = styled(Slider)`
 
 export default () => {
   const dispatch = useDispatch();
+  const stageVolume = useSelector((state) => state.mixer.volumeStage);
+  const interactionsVolume = useSelector(
+    (state) => state.mixer.volumeInteractions
+  );
   return (
     <Container>
       <Grid container>
@@ -51,10 +55,10 @@ export default () => {
               defaultValue={-100}
               min={-100}
               max={0}
+              value={stageVolume}
               onChange={(event, value) => {
-                dispatch(setVolumeInteractions(value));
+                dispatch(setVolumeStage(value));
               }}
-              aria-labelledby="vertical-slider"
             />
             <StyledSlider
               orientation="vertical"
@@ -62,10 +66,10 @@ export default () => {
               defaultValue={-100}
               min={-100}
               max={0}
+              value={interactionsVolume}
               onChange={(event, value) => {
-                // dispatch(setVolumeInteractions(value))
+                dispatch(setVolumeInteractions(value));
               }}
-              aria-labelledby="vertical-slider"
             />
           </Section>
         </Grid>
