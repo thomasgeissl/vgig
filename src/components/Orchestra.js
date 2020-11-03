@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useReducer } from "react";
 import { Provider as StoreProvider } from "react-redux";
 import styled from "styled-components";
 import {
@@ -11,6 +11,7 @@ import {
   MetalSynth,
   NoiseSynth,
   Channel,
+  now,
 } from "tone";
 import { status as statusTypes } from "../midi";
 import UnaCorda_C3 from "../assets/unacorda_C3.mp3";
@@ -28,6 +29,42 @@ import { NAME } from "../constants";
 import PostProcessing from "./visualisation/PostProcessing";
 import store from "../store";
 
+import Sample1 from "../assets/instruments/1.mp3";
+import Sample2 from "../assets/instruments/2.mp3";
+import Sample3 from "../assets/instruments/3.mp3";
+import Sample4 from "../assets/instruments/4.mp3";
+import Sample5 from "../assets/instruments/5.mp3";
+import Sample6 from "../assets/instruments/6.mp3";
+import Sample7 from "../assets/instruments/7.mp3";
+import Sample8 from "../assets/instruments/8.mp3";
+import Sample9 from "../assets/instruments/9.mp3";
+import Sample10 from "../assets/instruments/10.mp3";
+import Sample11 from "../assets/instruments/11.mp3";
+import Sample12 from "../assets/instruments/12.mp3";
+import Sample13 from "../assets/instruments/13.mp3";
+import Sample14 from "../assets/instruments/14.mp3";
+import Sample15 from "../assets/instruments/15.mp3";
+import Sample16 from "../assets/instruments/16.mp3";
+
+const samples = [
+  Sample1,
+  Sample2,
+  Sample3,
+  Sample4,
+  Sample5,
+  Sample6,
+  Sample7,
+  Sample8,
+  Sample9,
+  Sample10,
+  Sample11,
+  Sample12,
+  Sample13,
+  Sample14,
+  Sample15,
+  Sample16,
+];
+
 const Container = styled.div`
   width: 100%;
   height: 66.66%;
@@ -35,151 +72,42 @@ const Container = styled.div`
 
 export default ({ id }) => {
   const [channel, setChannel] = useState(null);
+  const [instruments, setInstruments] = useState(null);
   const [analyzer, setAnalyzer] = useState(null);
-  const [unaCorda, setUnaCorda] = useState(null);
-  const [violin, setViolin] = useState(null);
-  const [bass, setBass] = useState(null);
-  const [metal, setMetal] = useState(null);
-  const [noise, setNoise] = useState(null);
   const [fftValues, setFftValues] = useState([]);
+  const [subscribed, setSubscribed] = useState(false);
 
   const { subscribe, unsubscribe } = useClient();
 
   useEffect(() => {
-    const channel = new Channel();
+    const channel = new Channel(-32);
     channel.connect(Destination);
+    const instruments = [];
+    samples.forEach((sample, index) => {
+      instruments.push(new Sampler({ C3: sample }));
+      instruments[index].connect(channel);
+    });
     setChannel(channel);
-
-    const analyzer = new Analyser();
-    channel.connect(analyzer);
-    setAnalyzer(analyzer);
-    setInterval(() => {
-      if (analyzer) {
-        setFftValues(analyzer.getValue());
-      }
-    }, 50);
-
-    const percussion = new Sampler({ C3: UnaCorda_C3 });
-    const reverb = new Freeverb(0.6, 5000);
-    const pingPongDelay = new PingPongDelay({
-      delayTime: "32n",
-      feedback: 0.7,
-      wet: 0.25,
-    });
-    percussion.volume.value = 0;
-    percussion.connect(pingPongDelay);
-    pingPongDelay.connect(reverb);
-    reverb.connect(channel);
-    setUnaCorda(percussion);
-
-    const violin = new Sampler({ C3: JarbleAmbiencePad_C3 });
-    violin.volume.value = 0;
-    violin.connect(channel);
-    setViolin(violin);
-
-    const bass = new FMSynth({
-      volume: 0,
-      detune: 0,
-      portamento: 0,
-      harmonicity: 3,
-      oscillator: {
-        partialCount: 0,
-        partials: [],
-        phase: 0,
-        type: "sine",
-      },
-      envelope: {
-        attack: 0.01,
-        attackCurve: "linear",
-        decay: 0.2,
-        decayCurve: "exponential",
-        release: 0.5,
-        releaseCurve: "exponential",
-        sustain: 1,
-      },
-      modulation: {
-        partialCount: 0,
-        partials: [],
-        phase: 0,
-        type: "square",
-      },
-      modulationEnvelope: {
-        attack: 0.2,
-        attackCurve: "linear",
-        decay: 0.01,
-        decayCurve: "exponential",
-        release: 0.5,
-        releaseCurve: "exponential",
-        sustain: 1,
-      },
-      modulationIndex: 12.22,
-    });
-    bass.connect(channel);
-    setBass(bass);
-
-    const metal = new MetalSynth({
-      frequency: 200,
-      envelope: {
-        attack: 0.001,
-        decay: 1.4,
-        release: 0.2,
-      },
-      harmonicity: 5.1,
-      modulationIndex: 32,
-      resonance: 4000,
-      octaves: 1.5,
-    });
-    metal.connect(channel);
-    setMetal(metal);
-
-    const noise = new NoiseSynth();
-    noise.connect(channel);
-    setNoise(noise);
+    setInstruments(instruments);
   }, []);
 
-  useEffect(
-    () => {
-      subscribe(`${NAME}/${id}/orchestra`, (topic, message) => {
-        const { channel, note, status } = message;
-        // if(status !== statusTypes.noteOn && status !== statusTypes.noteOff) return
-        switch (channel) {
-          case 1: {
-            if (unaCorda) unaCorda.triggerAttackRelease(note);
-            break;
-          }
-          case 2: {
-            if (violin) violin.triggerAttackRelease(note);
-            break;
-          }
-          case 3: {
-            if (bass && status === statusTypes.noteOn) bass.triggerAttack(note);
-            if (bass && status === statusTypes.noteOff)
-              bass.triggerRelease(note);
-            break;
-          }
-          case 4: {
-            if (metal && status === statusTypes.noteOn)
-              metal.triggerAttack(note);
-            if (metal && status === statusTypes.noteOff)
-              metal.triggerRelease(note);
-            break;
-          }
-          case 5: {
-            if (noise && status === statusTypes.noteOn) noise.triggerAttack();
-            if (noise && status === statusTypes.noteOff) noise.triggerRelease();
-            break;
-          }
-          default: {
-            break;
-          }
+  useEffect(() => {
+    if (!instruments || subscribed) return;
+    setSubscribed(true);
+    console.log("subscribe to orchestra topic", instruments);
+    subscribe(`${NAME}/${id}/orchestra`, (topic, message) => {
+      const { channel, note, status, velocity } = message;
+      if (channel && channel > 0 && channel <= 16) {
+        if (status === statusTypes.noteOn) {
+          instruments[channel - 1].triggerAttack(note, now(), velocity);
         }
-      });
-    },
-    [unaCorda, violin, id],
-    () => {
-      unsubscribe(`${NAME}/${id}/orchestra`);
-    }
-  );
+        if (status === statusTypes.noteOff) {
+          instruments[channel - 1].triggerRelease(note, now());
+        }
+      }
+      // if(status !== statusTypes.noteOn && status !== statusTypes.noteOff) return
+    });
+  }, [instruments]);
 
   // console.log(analyzer ? analyzer.getValue() : "")
   return (
