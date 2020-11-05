@@ -90,6 +90,8 @@ export default ({ id }) => {
     const instruments = [];
     samples.forEach((sample, index) => {
       instruments.push(new Sampler({ C3: sample }));
+      instruments[index].attack = 0;
+      instruments[index].release = 1.3;
       instruments[index].connect(channel);
     });
     setChannel(channel);
