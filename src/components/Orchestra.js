@@ -101,7 +101,6 @@ export default ({ id }) => {
   useEffect(() => {
     if (!instruments || subscribed) return;
     setSubscribed(true);
-    console.log("subscribe to orchestra topic", instruments);
     subscribe(`${NAME}/${id}/orchestra`, (topic, message) => {
       const { channel, note, status, velocity } = message;
       if (channel && channel > 0 && channel <= 16) {

@@ -6,19 +6,17 @@ import styled from "styled-components";
 import { Sampler, Channel, Volume, Destination } from "tone";
 
 import Context from "../Context";
-import ClappingSample from "../assets/clapping.mp3";
-import TalkC2Sample from "../assets/talk_C2.mp3";
-import TalkC3Sample from "../assets/talk_C3.mp3";
-import TalkC4Sample from "../assets/talk_C4.mp3";
-import ShoutSample from "../assets/shout.mp3";
-import SingAlongSample from "../assets/singAlong.mp3";
+
+import Sample1 from "../assets/interactions/1.mp3";
+import Sample2 from "../assets/interactions/2.mp3";
+import Sample3 from "../assets/interactions/3.mp3";
+import Sample4 from "../assets/interactions/4.mp3";
+import Sample5 from "../assets/interactions/5.mp3";
+import Sample6 from "../assets/interactions/6.mp3";
+import Sample7 from "../assets/interactions/7.mp3";
+import Sample8 from "../assets/interactions/8.mp3";
 import EnterSample from "../assets/enter.mp3";
-import SneezeSample from "../assets/sneeze.mp3";
-import CoughSample from "../assets/cough.mp3";
-import PhotographSample from "../assets/photograph.mp3";
-import PhoneSample from "../assets/phone.mp3";
-import WalkSample from "../assets/walk.mp3";
-import DanceSample from "../assets/dance.mp3";
+
 import { NAME } from "../constants";
 import { useClient } from "../mqttConnection";
 
@@ -27,6 +25,17 @@ import { addToHistory } from "../store/reducers/console";
 import Button from "./Button";
 import Section from "./Section";
 import actions from "../config/actions";
+
+const samples = [
+  Sample1,
+  Sample2,
+  Sample3,
+  Sample4,
+  Sample5,
+  Sample6,
+  Sample7,
+  Sample8,
+];
 
 const Container = styled.div`
   background-color: black;
@@ -39,25 +48,13 @@ const volumeNode = new Volume(0);
 channel.connect(volumeNode);
 volumeNode.connect(Destination);
 
-const clapping = new Sampler({ C3: ClappingSample });
-clapping.connect(channel);
-
 export default () => {
   const [context] = useContext(Context);
   const { subscribe, publish, getClient } = useClient();
+  const [channel, setChannel] = useState(null);
+  const [sfx, setSfx] = useState(null);
   const [enter, setEnter] = useState(null);
   const [leave, setLeave] = useState(null);
-  const [talk, setTalk] = useState(null);
-  const [shout, setShout] = useState(null);
-  const [singAlong, setSingAlong] = useState(null);
-  const [photograph, setPhotograph] = useState(null);
-  const [phone, setPhone] = useState(null);
-  const [sneeze, setSneeze] = useState(null);
-  const [cough, setCough] = useState(null);
-  const [walk, setWalk] = useState(null);
-  const [dance, setDance] = useState(null);
-  // const [channel, setChannel] = useState(null)
-  // const [volume, setVolume] = useState(null)
 
   const dispatch = useDispatch();
   const volume = useSelector((state) => state.mixer.volumeInteractions);
@@ -67,22 +64,17 @@ export default () => {
   }
 
   useEffect(() => {
-    const singAlong = new Sampler({ C3: SingAlongSample });
-    singAlong.connect(channel);
-    setSingAlong(singAlong);
-
-    const talking = new Sampler({
-      C2: TalkC2Sample,
-      C3: TalkC3Sample,
-      C4: TalkC4Sample,
+    const channel = new Channel(-32);
+    channel.connect(Destination);
+    const instruments = [];
+    samples.forEach((sample, index) => {
+      instruments.push(new Sampler({ C3: sample }));
+      instruments[index].attack = 0;
+      instruments[index].release = 1.3;
+      instruments[index].connect(channel);
     });
-
-    talking.connect(channel);
-    setTalk(talking);
-
-    const shout = new Sampler({ C3: ShoutSample });
-    shout.connect(channel);
-    setShout(shout);
+    setChannel(channel);
+    setSfx(instruments);
 
     const enter = new Sampler({ C3: EnterSample });
     enter.connect(channel);
@@ -91,96 +83,27 @@ export default () => {
     const leave = new Sampler({ C3: EnterSample });
     leave.connect(channel);
     setLeave(leave);
-
-    const photograph = new Sampler({ C3: PhotographSample });
-    photograph.connect(channel);
-    setPhotograph(photograph);
-
-    const phone = new Sampler({ C3: PhoneSample });
-    phone.connect(channel);
-    setPhone(phone);
-
-    const walk = new Sampler({ C3: WalkSample });
-    walk.connect(channel);
-    setWalk(walk);
-
-    const dance = new Sampler({ C3: DanceSample });
-    dance.connect(channel);
-    setDance(dance);
-
-    const sneeze = new Sampler({ C3: SneezeSample });
-    sneeze.connect(channel);
-    setSneeze(sneeze);
-
-    const cough = new Sampler({ C3: CoughSample });
-    cough.connect(channel);
-    setCough(cough);
-
-    const client = getClient();
-    client.on("connect", () => {});
   }, []);
+
   useEffect(() => {
-    subscribe(`${NAME}/${context.hallId}/applaude`, (topic, message) => {
-      clapping.triggerAttackRelease(40 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "applauded"));
-    });
-    subscribe(`${NAME}/${context.hallId}/talk`, (topic, message) => {
-      talk.triggerAttackRelease(20 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "talked"));
-    });
-    subscribe(`${NAME}/${context.hallId}/shout`, (topic, message) => {
-      shout.triggerAttackRelease(40 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "shouted"));
-    });
-    subscribe(`${NAME}/${context.hallId}/singAlong`, (topic, message) => {
-      singAlong.triggerAttackRelease(40 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "sang along"));
-    });
     subscribe(`${NAME}/${context.hallId}/enter`, (topic, message) => {
-      enter.triggerAttackRelease(72, 20);
-      dispatch(addToHistory(message.userId, "entered"));
+      enter.triggerAttackRelease("C3", 20);
+      dispatch(addToHistory(message.userId, "entered."));
     });
     subscribe(`${NAME}/${context.hallId}/leave`, (topic, message) => {
-      console.log("user left", message);
-      dispatch(addToHistory(message.userId, "left"));
+      leave.triggerAttackRelease("C3", 20);
+      dispatch(addToHistory(message.userId, "left."));
     });
-    subscribe(`${NAME}/${context.hallId}/photograph`, (topic, message) => {
-      photograph.triggerAttackRelease(40 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "took a photo"));
+    actions.forEach((action, index) => {
+      subscribe(`${NAME}/${context.hallId}/${action.id}`, (topic, message) => {
+        sfx[index].triggerAttackRelease(
+          40 + Math.round(Math.random() * 60),
+          20
+        );
+        dispatch(addToHistory(message.userId, action.logText));
+      });
     });
-    subscribe(`${NAME}/${context.hallId}/phone`, (topic, message) => {
-      phone.triggerAttackRelease(40 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "took a phone call"));
-    });
-    subscribe(`${NAME}/${context.hallId}/walk`, (topic, message) => {
-      walk.triggerAttackRelease(40 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "walked"));
-    });
-    subscribe(`${NAME}/${context.hallId}/dance`, (topic, message) => {
-      dance.triggerAttackRelease(40 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "danced"));
-    });
-    subscribe(`${NAME}/${context.hallId}/sneeze`, (topic, message) => {
-      sneeze.triggerAttackRelease(40 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "sneezed"));
-    });
-    subscribe(`${NAME}/${context.hallId}/cough`, (topic, message) => {
-      cough.triggerAttackRelease(50 + Math.round(Math.random() * 60), 20);
-      dispatch(addToHistory(message.userId, "coughed"));
-    });
-  }, [
-    context.hallId,
-    talk,
-    singAlong,
-    walk,
-    phone,
-    photograph,
-    dance,
-    cough,
-    sneeze,
-    enter,
-    leave,
-  ]);
+  }, [context.hallId]);
 
   return (
     <Container>
@@ -188,7 +111,7 @@ export default () => {
         <Grid container>
           {actions.map((action, index) => {
             return (
-              <Grid item xs={2} key={index}>
+              <Grid item xs={3} key={index}>
                 <Button
                   key={action.id}
                   variant="outlined"
