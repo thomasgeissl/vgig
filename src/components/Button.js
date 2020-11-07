@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const Container = styled.div`
   display: inline-block;
@@ -10,7 +10,6 @@ const Container = styled.div`
 
 const RoundButton = styled.button`
   background-color: rgba(254, 250, 170, 1);
-  border: none;
   color: white;
   height: 32px;
   width: 32px;
@@ -20,6 +19,12 @@ const RoundButton = styled.button`
   font-size: 16px;
   margin: 5px;
   /* border-radius: 50%; */
+  border: none;
+  ${(props) =>
+    props.borderColor &&
+    css`
+      border: 3px solid ${props.borderColor};
+    `}
 `;
 const Label = styled.span`
   color: white;

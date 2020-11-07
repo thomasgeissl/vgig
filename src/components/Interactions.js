@@ -20,6 +20,7 @@ import EnterSample from "../assets/enter.mp3";
 import { NAME } from "../constants";
 import { useClient } from "../mqttConnection";
 
+import { setCurrentAction } from "../store/reducers/users";
 import { addToHistory } from "../store/reducers/console";
 
 import Button from "./Button";
@@ -101,6 +102,7 @@ export default () => {
           20
         );
         dispatch(addToHistory(message.userId, action.logText));
+        dispatch(setCurrentAction(message.userId, action.id));
       });
     });
   }, [context.hallId]);
@@ -116,6 +118,7 @@ export default () => {
                   key={action.id}
                   variant="outlined"
                   color="primary"
+                  borderColor={action.color}
                   onClick={() => {
                     publish(`${NAME}/${context.hallId}/${action.id}`, {
                       userId: context.userId,

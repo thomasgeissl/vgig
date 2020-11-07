@@ -3,6 +3,7 @@ const types = {
   SETUSERS: "SETUSERS",
   HEARTBEAT: "HEARTBEAT",
   SETNAME: "SETNAME",
+  SETCURRENTACTION: "SETCURRENTACTION",
 };
 
 const defaultState = {
@@ -17,10 +18,20 @@ export default (state = defaultState, action) => {
       let users = [...state.users];
       heartBeats.set(action.payload.value, Date.now());
       heartBeats.forEach((value, key) => {
-        if (Date.now() > value + 30 * 1000) {
+        if (Date.now() > value + 60 * 1000) {
+          console.log("user seems to be dead", key);
+          // delete from heartbeats map
           heartBeats.delete(key);
-          const index = users.indexOf(key);
-          if (index !== -1) users.splice(index, 1);
+          // delete from users array
+          let indexToBeRemoved = -1;
+          users.forEach((user, index) => {
+            if (user.id === key) {
+              indexToBeRemoved = index;
+            }
+          });
+          if (indexToBeRemoved !== -1) {
+            users.splice(indexToBeRemoved, 1);
+          }
         }
       });
       return {
@@ -78,6 +89,19 @@ export default (state = defaultState, action) => {
         users,
       };
     }
+    case types.SETCURRENTACTION: {
+      const users = [...state.users];
+      users.forEach((user, index) => {
+        if (user.id === action.payload.id) {
+          // user.name = action.payload.name;
+          users[index].currentAction = action.payload.action;
+        }
+      });
+      return {
+        ...state,
+        users,
+      };
+    }
     default:
       return state;
   }
@@ -115,6 +139,15 @@ export const setName = (id, name) => {
     payload: {
       id,
       name,
+    },
+  };
+};
+export const setCurrentAction = (id, action) => {
+  return {
+    type: types.SETCURRENTACTION,
+    payload: {
+      id,
+      action,
     },
   };
 };

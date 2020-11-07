@@ -13,6 +13,7 @@ import Context from "../Context";
 
 import { addUser, setUsers, heartBeat } from "../store/reducers/users";
 import store from "../store";
+import actions from "../config/actions";
 
 import Section from "./Section";
 
@@ -32,7 +33,15 @@ const User = styled.div`
   border-radius: 50%;
   display: inline-block;
   margin: 5px;
-  border: 1px solid black;
+  border: ${({ action }) => {
+    let color = "black";
+    actions.forEach((item) => {
+      if (item.id === action) {
+        color = item.color;
+      }
+    });
+    return `solid 2px ${color}`;
+  }};
 `;
 
 // const Sphere = ({position, color}) => {
@@ -91,7 +100,11 @@ export default ({ id }) => {
           const position = [(index / users.length) * 50, 0, 0];
           return (
             <Tooltip key={user.id} title={user.name} placement="right-start">
-              <User key={user.id} active={context.userId === user.id}>
+              <User
+                key={user.id}
+                active={context.userId === user.id}
+                action={user.currentAction}
+              >
                 {/* {user} */}
               </User>
             </Tooltip>
