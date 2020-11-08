@@ -3,9 +3,9 @@ import React from "react";
 export default () => {
   return (
     <>
-      <ambientLight intensity={0.4}></ambientLight>
-      <pointLight position={[-10, -5, 5]} intensity={0.4}></pointLight>
-      <pointLight position={[7, -3, 5]} intensity={0.4}></pointLight>
+      <ambientLight intensity={1}></ambientLight>
+      <pointLight position={[-10, -10, 5]} intensity={13.6}></pointLight>
+      <pointLight position={[7, -15, 5]} intensity={12.8}></pointLight>
     </>
   );
 };

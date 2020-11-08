@@ -36,10 +36,20 @@ export default ({ analyzer }) => {
       >
         here will be an audio visualisation
       </Text>
+
+      <Text
+        color="purple" // default
+        anchorX="center" // default
+        anchorY="center" // default
+        position={[-20, 2, 0]}
+      >
+        WSTG
+      </Text>
+
       <Floor></Floor>
-      <Particle position={[-2, 0, 0]}></Particle>
+      {/* <Particle position={[-2, 0, 0]}></Particle>
       <Particle position={[-1, 2, 0]}></Particle>
-      <Particle position={[2, 3, 0]}></Particle>
+      <Particle position={[2, 3, 0]}></Particle> */}
       <mesh>
         <bufferGeometry></bufferGeometry>
       </mesh>

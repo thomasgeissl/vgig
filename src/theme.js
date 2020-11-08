@@ -9,4 +9,17 @@ export default createMuiTheme({
       main: "rgb(220, 46, 40)",
     },
   },
+  overrides: {
+    MuiSlider: {
+      thumb: {
+        color: "white",
+      },
+      track: {
+        color: "white",
+      },
+      rail: {
+        color: "white",
+      },
+    },
+  },
 });

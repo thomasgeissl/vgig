@@ -4,6 +4,7 @@ const types = {
   HEARTBEAT: "HEARTBEAT",
   SETNAME: "SETNAME",
   SETCURRENTACTION: "SETCURRENTACTION",
+  UNSETCURRENTACTION: "UNSETCURRENTACTION",
 };
 
 const defaultState = {
@@ -102,6 +103,19 @@ export default (state = defaultState, action) => {
         users,
       };
     }
+    case types.UNSETCURRENTACTION: {
+      const users = [...state.users];
+      users.forEach((user, index) => {
+        if (user.id === action.payload.id) {
+          // user.name = action.payload.name;
+          users[index].currentAction = "";
+        }
+      });
+      return {
+        ...state,
+        users,
+      };
+    }
     default:
       return state;
   }
@@ -151,5 +165,12 @@ export const setCurrentAction = (id, action) => {
     },
   };
 };
-
+export const unSetCurrentAction = (id) => {
+  return {
+    type: types.UNSETCURRENTACTION,
+    payload: {
+      id,
+    },
+  };
+};
 export { types };

@@ -28,20 +28,29 @@ const Users = styled.div`
 const User = styled.div`
   height: 25px;
   width: 25px;
-  background-color: ${(props) =>
-    props.active ? "rgb(255,170,100)" : "rgb(254, 250, 170)"};
+  background-color: ${({ action }) => {
+    let color = "rgb(64,64,64)";
+    actions.forEach((item) => {
+      if (item.id === action) {
+        color = item.color;
+      }
+    });
+    return `${color}`;
+  }};
+  /* background-color: ${(props) =>
+    props.active ? "rgb(255,170,100)" : "rgb(254, 250, 170)"}; */
   border-radius: 50%;
   display: inline-block;
   margin: 5px;
-  border: ${({ action }) => {
+  /* border: ${({ action }) => {
     let color = "black";
     actions.forEach((item) => {
       if (item.id === action) {
         color = item.color;
       }
     });
-    return `solid 2px ${color}`;
-  }};
+    return `solid 3px ${color}`;
+  }}; */
 `;
 
 // const Sphere = ({position, color}) => {

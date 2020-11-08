@@ -3,6 +3,8 @@ import styled, { css } from "styled-components";
 
 const Container = styled.div`
   height: 100%;
+  display: flex;
+  flex-direction: column;
   text-align: left;
   ${(props) =>
     props.color &&
@@ -12,7 +14,7 @@ const Container = styled.div`
       border-right: 1px solid white;
     `}
 `;
-const Title = styled.section`
+const Title = styled.div`
   width: 100%;
   text-transform: uppercase;
   color: white;
@@ -23,12 +25,15 @@ const Title = styled.section`
       background-color: ${props.color};
     `}
 `;
+const Content = styled.div`
+  flex-grow: 1;
+`;
 
 export default ({ title, color, children }) => {
   return (
     <Container color={color}>
       <Title color={color}>{title}</Title>
-      {children}
+      <Content>{children}</Content>
     </Container>
   );
 };

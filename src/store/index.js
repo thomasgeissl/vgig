@@ -13,7 +13,6 @@ const store = createStore(
 );
 
 epicMiddleware.run(rootEpic);
-// store.subscribe(() => console.log(store.getState()))
 store.dispatch({
   type: "INIT",
 });

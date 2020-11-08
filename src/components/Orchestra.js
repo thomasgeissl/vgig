@@ -105,7 +105,7 @@ export default ({ id }) => {
       const { channel, note, status, velocity } = message;
       if (channel && channel > 0 && channel <= 16) {
         if (status === statusTypes.noteOn) {
-          instruments[channel - 1].triggerAttack(note, now(), velocity);
+          instruments[channel - 1].triggerAttack(note, now(), velocity / 127);
         }
         if (status === statusTypes.noteOff) {
           instruments[channel - 1].triggerRelease(note, now());

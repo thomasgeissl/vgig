@@ -25,7 +25,9 @@ import { addToHistory } from "../store/reducers/console";
 
 import Button from "./Button";
 import Section from "./Section";
-import actions from "../config/actions";
+import config from "../config/config.json";
+
+const actions = config.actions;
 
 const samples = [
   Sample1,

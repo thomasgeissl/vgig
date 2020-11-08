@@ -13,6 +13,7 @@ import { GlitchMode } from "postprocessing";
 
 export default () => {
   const glitch = useSelector((state) => state.mixer.glitch);
+  console.log("new glitch value", glitch);
   return (
     <EffectComposer>
       <DepthOfField
@@ -22,15 +23,15 @@ export default () => {
         height={480}
       />
       <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} />
-      <Noise opacity={0.02} />
+      <Noise opacity={0.2} />
       <Vignette eskil={false} offset={0.1} darkness={1.1} />
       <Glitch
-        delay={[1.5, 3.5]} // min and max glitch delay
-        duration={[0.6, 1.0]} // min and max glitch duration
-        strength={[0.3, 1.0]} // min and max glitch strength
+        delay={[1.5, 10.5]} // min and max glitch delay
+        duration={[0.05, 0.4]} // min and max glitch duration
+        strength={[0.002, 0.02]} // min and max glitch strength
         mode={GlitchMode.SPORADIC} // glitch mode
-        active={glitch} // turn on/off the effect (switches between "mode" prop and GlitchMode.DISABLED)
-        ratio={0.85} // Threshold for strong glitches, 0 - no weak glitches, 1 - no strong glitches.
+        ratio={0.48} // Threshold for strong glitches, 0 - no weak glitches, 1 - no strong glitches.
+        active={glitch}
       />
     </EffectComposer>
   );

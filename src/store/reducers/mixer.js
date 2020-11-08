@@ -5,8 +5,8 @@ const types = {
 };
 
 const defaultState = {
-  volumeInteractions: -32,
-  volumeStage: -32,
+  volumeInteractions: -6,
+  volumeStage: 0,
   glitch: true,
 };
 
@@ -46,6 +46,15 @@ export const setVolumeInteractions = (value) => {
 export const setVolumeStage = (value) => {
   return {
     type: types.SETVOLUMESTAGE,
+    payload: {
+      value,
+    },
+  };
+};
+
+export const setGlitch = (value) => {
+  return {
+    type: types.SETGLITCH,
     payload: {
       value,
     },
