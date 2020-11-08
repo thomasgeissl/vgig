@@ -21,6 +21,8 @@ const User = styled.span`
 `;
 const List = styled.ul`
   list-style-type: none;
+  max-height: 100%;
+  overflow-y: scroll;
 `;
 
 export default () => {

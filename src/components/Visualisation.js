@@ -5,7 +5,7 @@ import { extend, Canvas, useFrame } from "react-three-fiber";
 import { Text } from "@react-three/drei/Text";
 
 import Floor from "./visualisation/Floor";
-import Test from "./visualisation/test";
+import Stage from "./visualisation/Stage";
 
 extend(meshline);
 
@@ -47,13 +47,13 @@ export default ({ analyzer }) => {
       </Text>
 
       <Floor></Floor>
+      <Stage></Stage>
       {/* <Particle position={[-2, 0, 0]}></Particle>
       <Particle position={[-1, 2, 0]}></Particle>
       <Particle position={[2, 3, 0]}></Particle> */}
       <mesh>
         <bufferGeometry></bufferGeometry>
       </mesh>
-      <Test></Test>
 
       {/* <Lines count={fftValues.length} colors={['rgb(100,0,0)', '#222', '#aaa', '#e0feff', 'rgb(100,0,60)', 'rgb(127,32,64)']} /> */}
       {
