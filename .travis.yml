@@ -9,4 +9,4 @@ deploy:
   script: yarn install && yarn travisdeploy
   skip_cleanup: true
   on:
-    tags: true
+    branch: master
