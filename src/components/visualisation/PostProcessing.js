@@ -22,7 +22,7 @@ export default () => {
         height={480}
       />
       <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} />
-      <Noise opacity={0.2} />
+      <Noise opacity={0.05} />
       <Vignette eskil={false} offset={0.1} darkness={1.1} />
       <Glitch
         delay={[1.5, 10.5]} // min and max glitch delay

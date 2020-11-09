@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import CloseIcon from "@material-ui/icons/Close";
 
 const Container = styled.div`
   height: 100%;
@@ -29,11 +30,18 @@ const Content = styled.div`
   flex-grow: 1;
 `;
 
-export default ({ title, color, children }) => {
+export default ({ title, color, children, onClose }) => {
   return (
     <Container color={color}>
       <Title color={color}>{title}</Title>
       <Content>{children}</Content>
+      {onClose && (
+        <CloseIcon
+          color={"white"}
+          onClick={onClose}
+          style={{ position: "absolute", left: "5px" }}
+        ></CloseIcon>
+      )}
     </Container>
   );
 };

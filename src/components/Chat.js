@@ -35,7 +35,7 @@ const Input = styled.div`
   width: 100%;
 `;
 
-export default () => {
+export default ({ onClose }) => {
   const [message, setMessage] = useState("");
   const [showChatMessages, setShowChatMessages] = useState(true);
   const [showSystemMessages, setShowSystemMessages] = useState(false);
@@ -59,7 +59,11 @@ export default () => {
 
   return (
     <Container>
-      <Section title={"chat/console"} color={"rgb(46, 94, 160)"}>
+      <Section
+        title={"chat/console"}
+        color={"rgb(46, 94, 160)"}
+        onClose={onClose}
+      >
         <FormControlLabel
           control={
             <Switch

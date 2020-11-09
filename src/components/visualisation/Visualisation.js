@@ -29,20 +29,28 @@ export default ({ analyser }) => {
   const testTextRef = useRef(null);
   const [particles, setParticles] = useState([]);
   const [particleRefs, setParticleRefs] = useState([]);
-  useEffect(() => {
-    const particleRefs = (particleRefs) =>
-      Array(1024)
-        .fill()
-        .map((_, i) => particleRefs[i] || createRef());
-    setParticleRefs(particleRefs);
 
-    const particles = [...Array(1024)].map((item, index) => (
-      <Particle
-        key={index}
-        position={[index / 50, 0, 5]}
-        ref={particleRefs[index]}
-      ></Particle>
-    ));
+  useEffect(() => {
+    const particleRefs = Array(1024).fill(createRef());
+    // particleRefs.forEach((particleRef, index)=>{
+    //   particleRefs[index]
+
+    // })
+    // particleRefs.map((_, i) => createRef());
+    // console.log(particleRefs);
+
+    const particles = [...Array(1024)].map((item, index) => {
+      const x = (index / 1024) * 600 - 300; // -halfWidth
+      return (
+        <Particle
+          key={index}
+          position={[x, 0, 5]}
+          ref={particleRefs[index]}
+        ></Particle>
+      );
+    });
+
+    setParticleRefs(particleRefs);
     setParticles(particles);
   }, []);
 
@@ -53,10 +61,11 @@ export default ({ analyser }) => {
       values.forEach((value) => (sum += value));
       testTextRef.current.scale.x = sum / 1024;
     }
+    console.log(particleRefs[0].current);
     particleRefs.forEach((ref, index) => {
-      // console.log("update ref", ref, index);
-      if (ref && ref.current) {
-        ref.current.scale.y = values[index] * 100;
+      if (ref) {
+        // console.log("update particle", ref, index);
+        // ref.current.scale.y = values[index] * 1000;
       }
     });
   });

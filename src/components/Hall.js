@@ -117,7 +117,13 @@ export default () => {
             <Mixer></Mixer>
           </Grid>
         </Grid>
-        {showConsole && <StyledChat></StyledChat>}
+        {showConsole && (
+          <StyledChat
+            onClose={() => {
+              setShowConsole(false);
+            }}
+          ></StyledChat>
+        )}
       </>
     </Container>
   );
