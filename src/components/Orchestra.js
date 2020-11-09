@@ -1,32 +1,16 @@
-import React, { useState, useEffect, useMemo, useRef, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import { Provider as StoreProvider, useSelector } from "react-redux";
 import styled from "styled-components";
-import {
-  Analyser,
-  Freeverb,
-  PingPongDelay,
-  Destination,
-  Sampler,
-  FMSynth,
-  MetalSynth,
-  NoiseSynth,
-  Channel,
-  now,
-} from "tone";
+import { Analyser, Destination, Sampler, Channel, now } from "tone";
 import { status as statusTypes } from "../midi";
-import UnaCorda_C3 from "../assets/unacorda_C3.mp3";
-import JarbleAmbiencePad_C3 from "../assets/jarbleambiencepad_C3.mp3";
-
-import Visualisation from "./Visualisation";
+import Visualisation from "./visualisation/Visualisation";
 import Lights from "./visualisation/Lights";
 import { Canvas } from "react-three-fiber";
 import { OrbitControls } from "drei";
-
 import { useClient } from "../mqttConnection";
 
-import { NAME } from "../constants";
-
 import PostProcessing from "./visualisation/PostProcessing";
+import { NAME } from "../constants";
 import store from "../store";
 
 import Sample1 from "../assets/instruments/1.mp3";
@@ -73,11 +57,10 @@ const Container = styled.div`
 export default ({ id }) => {
   const [channel, setChannel] = useState(null);
   const [instruments, setInstruments] = useState(null);
-  const [analyzer, setAnalyzer] = useState(null);
-  const [fftValues, setFftValues] = useState([]);
+  const [analyser, setAnalyser] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
 
-  const { subscribe, unsubscribe } = useClient();
+  const { subscribe } = useClient();
   const volume = useSelector((state) => state.mixer.volumeStage);
   if (channel) {
     // volumeNode.volume.value = volume
@@ -96,10 +79,15 @@ export default ({ id }) => {
     });
     setChannel(channel);
     setInstruments(instruments);
+
+    const analyser = new Analyser("fft", 1024);
+    channel.connect(analyser);
+    setAnalyser(analyser);
   }, []);
 
   useEffect(() => {
-    if (!instruments || subscribed) return;
+    if (!id || !instruments || subscribed) return;
+    console.log("subscribing to orchestra topics");
     setSubscribed(true);
     subscribe(`${NAME}/${id}/orchestra`, (topic, message) => {
       const { channel, note, status, velocity } = message;
@@ -111,11 +99,13 @@ export default ({ id }) => {
           instruments[channel - 1].triggerRelease(note, now());
         }
       }
-      // if(status !== statusTypes.noteOn && status !== statusTypes.noteOff) return
     });
-  }, [instruments]);
+  }, [instruments, subscribed, id, subscribe]);
 
-  // console.log(analyzer ? analyzer.getValue() : "")
+  // useFrame((state) => {
+  //   console.log("frame", state);
+  //   // console.log(analyser.getValue());
+  // });
   return (
     <Container>
       <Canvas
@@ -126,7 +116,7 @@ export default ({ id }) => {
         <OrbitControls></OrbitControls>
         <Lights></Lights>
 
-        <Visualisation analyzer={analyzer}></Visualisation>
+        <Visualisation analyser={analyser}></Visualisation>
         <StoreProvider store={store}>
           <PostProcessing></PostProcessing>
         </StoreProvider>

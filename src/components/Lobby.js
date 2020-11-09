@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
 import styled from "styled-components";
@@ -16,7 +15,7 @@ const Actions = styled.section`
 const EnterButton = styled(Button)``;
 
 export default ({ onEnter }) => {
-  const { subscribe, publish, getClient } = useClient();
+  const { publish } = useClient();
   const [name, setName] = useState("");
   const [context] = useContext(Context);
   return (

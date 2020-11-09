@@ -1,10 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { BoxBufferGeometry, MeshNormalMaterial } from "three";
-import { Canvas, useFrame, useThree } from "react-three-fiber";
-import {
-  unstable_LowPriority as low,
-  unstable_runWithPriority as run,
-} from "scheduler";
+import { useFrame, useThree } from "react-three-fiber";
 
 const SLOWDOWN = 1;
 const ROW = 20;
@@ -15,7 +11,7 @@ const matr = new MeshNormalMaterial();
 const rpi = () => Math.random() * Math.PI;
 
 function Block({ change, ...props }) {
-  const [color, set] = useState(0);
+  const [color] = useState(0);
 
   // Artificial slowdown ...
   if (color > 0) {

@@ -1,6 +1,4 @@
 import React from "react";
-import * as THREE from "three";
-import { extend, Canvas, useFrame } from "react-three-fiber";
 
 export default () => {
   return (

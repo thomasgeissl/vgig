@@ -42,6 +42,7 @@ interface Client {
     publish(topic: string): void
     unsubscribe(topic: string): void
     getClient(): MqttClient
+    getSubscriptions(): Map<string, Array<Function>> 
 }
 
 export function createConnection(options: string) {
@@ -115,7 +116,8 @@ export function createConnection(options: string) {
                 listeners.delete(topic)
                 client.unsubscribe(topic)
             },
-            getClient: () => client
+            getClient: () => client,
+            getSubscriptions: () => listeners
         }
     }
 }

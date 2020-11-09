@@ -1,10 +1,6 @@
-import React, { useEffect, useContext, useCallback } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Tooltip from "@material-ui/core/Tooltip";
-// import * as THREE from 'three'
-// import { OrbitControls } from 'drei'
-// import { Canvas } from 'react-three-fiber'
-// import { useSprings, a } from 'react-spring/three'
 import styled from "styled-components";
 import { useClient } from "../mqttConnection";
 import { NAME } from "../constants";
@@ -13,9 +9,8 @@ import Context from "../Context";
 
 import { addUser, setUsers, heartBeat } from "../store/reducers/users";
 import store from "../store";
-import actions from "../config/actions";
-
-import Section from "./Section";
+import config from "../config/config.json";
+const actions = config.actions;
 
 const Container = styled.div`
   margin-top: 16px;
@@ -65,15 +60,16 @@ const User = styled.div`
 export default ({ id }) => {
   const dispatch = useDispatch();
   const { subscribe, unsubscribe } = useClient();
-  const [context, setContext] = useContext(Context);
-
+  const [context] = useContext(Context);
+  const [subscribed, setSubscribed] = useState(false);
   const users = useSelector((state) => state.users.users);
-  const getUsers = useCallback(() => {
-    return users;
-  });
+
   useEffect(
     () => {
+      if (subscribed) return;
+      setSubscribed(true);
       if (id) {
+        console.log("subscribing to audience topics");
         subscribe(`${NAME}/${id}/getUsers`, (topic, message) => {
           if (message.from && message.from !== context.userId) {
             publish(`${NAME}/${id}/setUsers`, store.getState().users.users);
@@ -96,7 +92,7 @@ export default ({ id }) => {
         }, 30 * 1000);
       }
     },
-    [id],
+    [subscribed, setSubscribed, id, subscribe, dispatch, context],
     () => {
       unsubscribe(`${NAME}/${id}/getUsers`);
     }
@@ -106,7 +102,7 @@ export default ({ id }) => {
       {/* <Section title={"audience"} color={"rgb(46, 94, 160)"}> */}
       <Users>
         {users.map((user, index) => {
-          const position = [(index / users.length) * 50, 0, 0];
+          // const position = [(index / users.length) * 50, 0, 0];
           return (
             <Tooltip key={user.id} title={user.name} placement="right-start">
               <User

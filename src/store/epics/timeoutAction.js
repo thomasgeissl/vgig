@@ -1,5 +1,4 @@
-import { filter, switchMap, map, takeUntil, delay } from "rxjs/operators";
-import { interval } from "rxjs";
+import { filter, map, delay } from "rxjs/operators";
 import { types, unSetCurrentAction } from "../reducers/users";
 
 export default (action$) =>

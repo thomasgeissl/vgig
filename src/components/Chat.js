@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import Context from "../Context";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -8,7 +8,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import TextField from "@material-ui/core/TextField";
 import SendIcon from "@material-ui/icons/Send";
-import { compareAsc, format } from "date-fns";
 import { useClient } from "../mqttConnection";
 
 import Section from "./Section";
@@ -36,18 +35,6 @@ const Input = styled.div`
   width: 100%;
 `;
 
-const Time = styled.span`
-  font-style: italic;
-  color: #333;
-`;
-const User = styled.span`
-  font-weight: bold;
-  color: #333;
-`;
-const List = styled.ul`
-  list-style-type: none;
-`;
-
 export default () => {
   const [message, setMessage] = useState("");
   const [showChatMessages, setShowChatMessages] = useState(true);
@@ -57,9 +44,8 @@ export default () => {
 
   const allMessages = [...history, ...messages].sort((x, y) => x.time < y.time);
   const [context] = useContext(Context);
-  const dispatch = useDispatch();
   const users = useSelector((state) => state.users.users);
-  const { subscribe, publish, getClient } = useClient();
+  const { publish } = useClient();
 
   const List = styled.ul`
     list-style-type: none;

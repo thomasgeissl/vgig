@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import MUIButton from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import styled from "styled-components";
 import { Sampler, Channel, Volume, Destination } from "tone";
@@ -53,7 +52,7 @@ volumeNode.connect(Destination);
 
 export default () => {
   const [context] = useContext(Context);
-  const { subscribe, publish, getClient } = useClient();
+  const { subscribe, publish } = useClient();
   const [channel, setChannel] = useState(null);
   const [sfx, setSfx] = useState(null);
   const [enter, setEnter] = useState(null);
@@ -89,6 +88,7 @@ export default () => {
   }, []);
 
   useEffect(() => {
+    if (!context.hallId || !enter || !leave || !sfx) return;
     subscribe(`${NAME}/${context.hallId}/enter`, (topic, message) => {
       enter.triggerAttackRelease("C3", 20);
       dispatch(addToHistory(message.userId, "entered."));
@@ -107,7 +107,7 @@ export default () => {
         dispatch(setCurrentAction(message.userId, action.id));
       });
     });
-  }, [context.hallId]);
+  }, [context.hallId, dispatch, enter, leave, sfx, subscribe]);
 
   return (
     <Container>

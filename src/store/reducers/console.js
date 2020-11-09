@@ -21,8 +21,9 @@ export default (state = defaultState, action) => {
         history,
       };
     }
+    default:
+      return state;
   }
-  return state;
 };
 
 const addToHistory = (user, text) => {

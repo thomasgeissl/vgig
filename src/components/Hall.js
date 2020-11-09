@@ -8,6 +8,7 @@ import Modal from "@material-ui/core/Modal";
 import Toolbar from "@material-ui/core/Toolbar";
 import ForumIcon from "@material-ui/icons/Forum";
 import styled from "styled-components";
+
 import Audience from "./Audience";
 import Lobby from "./Lobby";
 import Orchestra from "./Orchestra";
@@ -21,7 +22,6 @@ import { useClient } from "../mqttConnection";
 import { setName } from "../store/reducers/users";
 import { addMessage } from "../store/reducers/chat";
 
-import Console from "./Console";
 import Chat from "./Chat";
 
 const Container = styled.div`
@@ -49,17 +49,25 @@ const StyledChat = styled(Chat)`
   top: 0;
   width: 33vw;
 `;
-const panels = { CHAT: "CHAT", CONSOLE: "CONSOLE" };
 export default () => {
   const { id } = useParams();
   const [context, setContext] = useContext(Context);
   const { publish, subscribe } = useClient();
   const dispatch = useDispatch();
+  const [subscribed, setSubscribed] = useState(false);
   const [open, setOpen] = useState(true);
   const [showConsole, setShowConsole] = useState(false);
 
   useEffect(() => {
+    if (context.hallId === id) return;
+    console.log("storing hall id in context");
     setContext({ ...context, hallId: id });
+  }, [id, context, setContext]);
+
+  useEffect(() => {
+    if (subscribed) return;
+    setSubscribed(true);
+    console.log("subscribing to hall topics");
     publish(`${NAME}/${id}/enterLobby`, {
       userId: context.userId,
     });
@@ -69,11 +77,7 @@ export default () => {
     subscribe(`${NAME}/${id}/chat`, (topic, message) => {
       dispatch(addMessage(message.user, message.message));
     });
-    // publish(`${NAME}/${id}/getUsers`, { from: context.userId });
-    // setInterval(() => {
-    //   publish(`${NAME}/${id}/alive`, { userId: context.userId });
-    // }, 30 * 1000);hallId
-  }, [id]);
+  }, [id, subscribed, subscribe, publish, setSubscribed, dispatch, context]);
 
   return (
     <Container>
@@ -103,11 +107,11 @@ export default () => {
         </ModalContent>
       </StyledModal>
       <>
-        <Orchestra className="orchestra" id={id}></Orchestra>
-        <Audience className="audience" id={id}></Audience>
+        <Orchestra id={id}></Orchestra>
+        <Audience id={id}></Audience>
         <Grid container>
           <Grid item xs={12} sm={8}>
-            <Interactions className="interactions" id={id}></Interactions>
+            <Interactions id={id}></Interactions>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Mixer></Mixer>

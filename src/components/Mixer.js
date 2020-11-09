@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@material-ui/core/Grid";
-import MUISlider from "@material-ui/core/Slider";
 import Slider from "./Slider";
 import styled from "styled-components";
 
@@ -17,10 +16,6 @@ const Container = styled.div`
   background-color: black;
   display: flex;
   flex-direction: row;
-  height: 100%;
-  width: 100%;
-`;
-const AudioContainer = styled.div`
   height: 100%;
   width: 100%;
 `;
