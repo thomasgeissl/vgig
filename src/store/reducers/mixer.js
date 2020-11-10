@@ -5,7 +5,7 @@ const types = {
 };
 
 const defaultState = {
-  volumeInteractions: -6,
+  volumeInteractions: 0,
   volumeStage: 0,
   glitch: true,
 };
