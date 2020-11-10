@@ -25,34 +25,22 @@ const Particle = ({ position }) => {
   );
 };
 
+const particles = [...Array(1024)];
+
 export default ({ analyser }) => {
   const testTextRef = useRef(null);
-  const [particles, setParticles] = useState([]);
-  const [particleRefs, setParticleRefs] = useState([]);
 
-  useEffect(() => {
-    const particleRefs = Array(1024).fill(createRef());
-    // particleRefs.forEach((particleRef, index)=>{
-    //   particleRefs[index]
+  const particleRefs = useRef([]);
+  particleRefs.current = [];
 
-    // })
-    // particleRefs.map((_, i) => createRef());
-    // console.log(particleRefs);
-
-    const particles = [...Array(1024)].map((item, index) => {
-      const x = (index / 1024) * 600 - 300; // -halfWidth
-      return (
-        <Particle
-          key={index}
-          position={[x, 0, 5]}
-          ref={particleRefs[index]}
-        ></Particle>
-      );
-    });
-
-    setParticleRefs(particleRefs);
-    setParticles(particles);
-  }, []);
+  const addToRefs = (el) => {
+    if (el && !particleRefs.current.includes(el)) {
+      particleRefs.current.push(el);
+    }
+  };
+  // particleRefs.current = [...Array(1024)].map(
+  //   (ref, index) => (particleRefs.current[index] = createRef())
+  // );
 
   useFrame(() => {
     const values = analyser.getValue();
@@ -61,14 +49,18 @@ export default ({ analyser }) => {
       values.forEach((value) => (sum += value));
       testTextRef.current.scale.x = sum / 1024;
     }
-    // console.log(particleRefs[0].current);
-    particleRefs.forEach((ref, index) => {
+    // console.log(particleRefs.current[0]);
+    particleRefs.current.forEach((ref, index) => {
       if (ref) {
         // console.log("update particle", ref, index);
-        // ref.current.scale.y = values[index] * 1000;
+        ref.scale.y = values[index] * 0.005;
       }
     });
   });
+
+  // const addToRefs = (el) => {
+  //   console.log("add to refs", el);
+  // };
 
   return (
     <>
@@ -89,25 +81,43 @@ export default ({ analyser }) => {
       >
         WSTG
       </Text>
-      {particles.map((cube) => {
-        return cube;
+      {/* {particles.map((item, index) => {
+        console.log("test");
+
+        );
+      })} */}
+
+      {particles.map((item, index) => {
+        const width = 50;
+        const x = (index / 1024) * width - width / 2;
+        return (
+          <Text
+            key={index}
+            ref={addToRefs}
+            color="white" // default
+            anchorX="center" // default
+            anchorY="middle" // default
+            position={[x, 0, 0]}
+            fontSize={2}
+          >
+            wstg
+          </Text>
+          // <Particle
+          //   key={index}
+          //   position={[x, 0, 5]}
+          //   ref={(el) => {
+          //     console.log(el);
+          //   }}
+          // ></Particle>
+        );
       })}
 
       <Floor></Floor>
       <Stage></Stage>
-      {/* <Particle position={[-2, 0, 0]}></Particle>
-      <Particle position={[-1, 2, 0]}></Particle>
-      <Particle position={[2, 3, 0]}></Particle> */}
+
       <mesh>
         <bufferGeometry></bufferGeometry>
       </mesh>
-
-      {/* <Lines count={fftValues.length} colors={['rgb(100,0,0)', '#222', '#aaa', '#e0feff', 'rgb(100,0,60)', 'rgb(127,32,64)']} /> */}
-      {
-        // fftValues.forEach((value, index) => {
-        //     console.log(value, index)
-        // })
-      }
     </>
   );
 };
