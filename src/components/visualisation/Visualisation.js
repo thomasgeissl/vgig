@@ -61,7 +61,7 @@ export default ({ analyser }) => {
       values.forEach((value) => (sum += value));
       testTextRef.current.scale.x = sum / 1024;
     }
-    console.log(particleRefs[0].current);
+    // console.log(particleRefs[0].current);
     particleRefs.forEach((ref, index) => {
       if (ref) {
         // console.log("update particle", ref, index);

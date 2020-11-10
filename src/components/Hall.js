@@ -68,13 +68,13 @@ export default () => {
     if (subscribed) return;
     setSubscribed(true);
     console.log("subscribing to hall topics");
-    publish(`${NAME}/${id}/enterLobby`, {
+    publish(`${NAME}/${id}/audience/enterLobby`, {
       userId: context.userId,
     });
-    subscribe(`${NAME}/${id}/setUserName`, (topic, message) => {
+    subscribe(`${NAME}/${id}/audience/setUserName`, (topic, message) => {
       dispatch(setName(message.id, message.name));
     });
-    subscribe(`${NAME}/${id}/chat`, (topic, message) => {
+    subscribe(`${NAME}/${id}/audience/chat`, (topic, message) => {
       dispatch(addMessage(message.user, message.message));
     });
   }, [id, subscribed, subscribe, publish, setSubscribed, dispatch, context]);
@@ -97,7 +97,7 @@ export default () => {
         <ModalContent>
           <Lobby
             onEnter={(name) => {
-              publish(`${NAME}/${context.hallId}/enter`, {
+              publish(`${NAME}/${context.hallId}/audience/enter`, {
                 userId: context.userId,
                 name,
               });

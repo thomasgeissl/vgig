@@ -70,23 +70,26 @@ export default ({ id }) => {
       setSubscribed(true);
       if (id) {
         console.log("subscribing to audience topics");
-        subscribe(`${NAME}/${id}/getUsers`, (topic, message) => {
+        subscribe(`${NAME}/${id}/audience/getUsers`, (topic, message) => {
           if (message.from && message.from !== context.userId) {
-            publish(`${NAME}/${id}/setUsers`, store.getState().users.users);
+            publish(
+              `${NAME}/${id}/audience/setUsers`,
+              store.getState().users.users
+            );
           }
         });
-        subscribe(`${NAME}/${id}/setUsers`, (topic, message) => {
+        subscribe(`${NAME}/${id}/audience/setUsers`, (topic, message) => {
           dispatch(setUsers(message));
         });
-        subscribe(`${NAME}/${id}/enterLobby`, (topic, message) => {
+        subscribe(`${NAME}/${id}/audience/enterLobby`, (topic, message) => {
           dispatch(addUser(message.userId, "anonymous "));
         });
 
-        subscribe(`${NAME}/${id}/alive`, (topic, message) => {
+        subscribe(`${NAME}/${id}/audience/alive`, (topic, message) => {
           dispatch(heartBeat(message.userId));
         });
 
-        publish(`${NAME}/${id}/getUsers`, { from: context.userId });
+        publish(`${NAME}/${id}/audience/getUsers`, { from: context.userId });
         setInterval(() => {
           publish(`${NAME}/${id}/alive`, { userId: context.userId });
         }, 30 * 1000);
@@ -94,7 +97,7 @@ export default ({ id }) => {
     },
     [subscribed, setSubscribed, id, subscribe, dispatch, context],
     () => {
-      unsubscribe(`${NAME}/${id}/getUsers`);
+      unsubscribe(`${NAME}/${id}/audience/getUsers`);
     }
   );
   return (

@@ -48,9 +48,6 @@ export default () => {
                   color="primary"
                   onClick={() => {
                     dispatch(setGlitch(!glitch));
-                    // publish(`${NAME}/${context.hallId}/${action}`, {
-                    //   userId: context.userId,
-                    // });
                   }}
                   label={"glitch"}
                 ></Button>

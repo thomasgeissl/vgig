@@ -89,23 +89,26 @@ export default () => {
 
   useEffect(() => {
     if (!context.hallId || !enter || !leave || !sfx) return;
-    subscribe(`${NAME}/${context.hallId}/enter`, (topic, message) => {
+    subscribe(`${NAME}/${context.hallId}/audience/enter`, (topic, message) => {
       enter.triggerAttackRelease("C3", 20);
       dispatch(addToHistory(message.userId, "entered."));
     });
-    subscribe(`${NAME}/${context.hallId}/leave`, (topic, message) => {
+    subscribe(`${NAME}/${context.hallId}/audience/leave`, (topic, message) => {
       leave.triggerAttackRelease("C3", 20);
       dispatch(addToHistory(message.userId, "left."));
     });
     actions.forEach((action, index) => {
-      subscribe(`${NAME}/${context.hallId}/${action.id}`, (topic, message) => {
-        sfx[index].triggerAttackRelease(
-          40 + Math.round(Math.random() * 60),
-          20
-        );
-        dispatch(addToHistory(message.userId, action.logText));
-        dispatch(setCurrentAction(message.userId, action.id));
-      });
+      subscribe(
+        `${NAME}/${context.hallId}/audience/${action.id}`,
+        (topic, message) => {
+          sfx[index].triggerAttackRelease(
+            40 + Math.round(Math.random() * 60),
+            20
+          );
+          dispatch(addToHistory(message.userId, action.logText));
+          dispatch(setCurrentAction(message.userId, action.id));
+        }
+      );
     });
   }, [context.hallId, dispatch, enter, leave, sfx, subscribe]);
 
@@ -122,7 +125,7 @@ export default () => {
                   color="primary"
                   borderColor={action.color}
                   onClick={() => {
-                    publish(`${NAME}/${context.hallId}/${action.id}`, {
+                    publish(`${NAME}/${context.hallId}/audience/${action.id}`, {
                       userId: context.userId,
                     });
                   }}

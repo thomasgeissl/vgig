@@ -125,7 +125,7 @@ export default ({ onClose }) => {
                 onKeyPress={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    publish(`vgig/${context.hallId}/chat`, {
+                    publish(`vgig/${context.hallId}/audience/chat`, {
                       user: context.userId,
                       message: message,
                     });
@@ -141,7 +141,7 @@ export default ({ onClose }) => {
                 fullWidth
                 onClick={(event) => {
                   if (message !== "") {
-                    publish(`vgig/${context.hallId}/chat`, {
+                    publish(`vgig/${context.hallId}/audience/chat`, {
                       user: context.userId,
                       message: message,
                     });

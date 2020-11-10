@@ -1,4 +1,4 @@
-import { createConnection } from "./libmqtt"
+import { createConnection } from "./libmqtt";
 
 // export const useClient = createConnection({
 //     protocol: "wss",
@@ -8,9 +8,15 @@ import { createConnection } from "./libmqtt"
 //     port: 80,
 // })
 // export const useClient = createConnection({
-//     protocol: "ws", 
- //     host: "localhost",
+//     protocol: "ws",
+//     host: "localhost",
 //     port: 9001,
 // })
 
-export const useClient = createConnection("wss://try:try@broker.shiftr.io")
+// export const useClient = createConnection("wss://try:try@broker.shiftr.io")
+// export const useClient = createConnection(
+//   "ws://audience:audience@localhost:9001"
+// );
+export const useClient = createConnection(
+  "ws://audience:audience@162.243.174.205:8080"
+);
