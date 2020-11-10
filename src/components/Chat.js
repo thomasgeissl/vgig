@@ -11,6 +11,7 @@ import SendIcon from "@material-ui/icons/Send";
 import { useClient } from "../mqttConnection";
 
 import Section from "./Section";
+import config from "../config/config.json";
 
 const Container = styled.div`
   width: 33vw;
@@ -38,11 +39,13 @@ const Input = styled.div`
 export default ({ onClose }) => {
   const [message, setMessage] = useState("");
   const [showChatMessages, setShowChatMessages] = useState(true);
-  const [showSystemMessages, setShowSystemMessages] = useState(false);
+  const [showSystemMessages, setShowSystemMessages] = useState(!config.chat);
   const history = useSelector((state) => state.console.history);
   const messages = useSelector((state) => state.chat.messages);
 
-  const allMessages = [...history, ...messages].sort((x, y) => x.time < y.time);
+  const allMessages = config.chat
+    ? [...history, ...messages].sort((x, y) => x.time < y.time)
+    : [...history];
   const [context] = useContext(Context);
   const users = useSelector((state) => state.users.users);
   const { publish } = useClient();
@@ -52,43 +55,51 @@ export default ({ onClose }) => {
   `;
 
   const ChatMessage = styled.li``;
-  const SystemMessage = styled.li`
-    font-style: italic;
-    text-align: right;
-  `;
+  const SystemMessage = config.chat
+    ? styled.li`
+        font-style: italic;
+        text-align: right;
+      `
+    : styled.li`
+        font-style: italic;
+      `;
 
   return (
     <Container>
       <Section
-        title={"chat/console"}
+        title={config.chat ? "chat/console" : "console"}
         color={"rgb(46, 94, 160)"}
         onClose={onClose}
       >
-        <FormControlLabel
-          control={
-            <Switch
-              checked={showChatMessages}
-              onChange={(event) => {
-                setShowChatMessages(event.target.checked);
-              }}
-              color="primary"
+        {config.chat && (
+          <>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showChatMessages}
+                  onChange={(event) => {
+                    setShowChatMessages(event.target.checked);
+                  }}
+                  color="primary"
+                />
+              }
+              label="chat messages"
             />
-          }
-          label="chat messages"
-        />
 
-        <FormControlLabel
-          control={
-            <Switch
-              checked={showSystemMessages}
-              onChange={(event) => {
-                setShowSystemMessages(event.target.checked);
-              }}
-              color="primary"
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showSystemMessages}
+                  onChange={(event) => {
+                    setShowSystemMessages(event.target.checked);
+                  }}
+                  color="primary"
+                />
+              }
+              label="system messages"
             />
-          }
-          label="system messages"
-        />
+          </>
+        )}
 
         <List>
           {allMessages.map((message, index) => {
@@ -112,48 +123,50 @@ export default ({ onClose }) => {
             );
           })}
         </List>
-        <Input>
-          <Grid
-            container
-            //   spacing={2}
-          >
-            <Grid item xs={9}>
-              <TextField
-                fullWidth
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    publish(`vgig/${context.hallId}/audience/chat`, {
-                      user: context.userId,
-                      message: message,
-                    });
+        {config.chat && (
+          <Input>
+            <Grid
+              container
+              //   spacing={2}
+            >
+              <Grid item xs={9}>
+                <TextField
+                  fullWidth
+                  value={message}
+                  onChange={(event) => setMessage(event.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      publish(`vgig/${context.hallId}/audience/chat`, {
+                        user: context.userId,
+                        message: message,
+                      });
+                      setMessage("");
+                    }
+                  }}
+                ></TextField>
+              </Grid>
+              <Grid item xs={3}>
+                <Button
+                  color="primary"
+                  // variant="outlined"
+                  fullWidth
+                  onClick={(event) => {
+                    if (message !== "") {
+                      publish(`vgig/${context.hallId}/audience/chat`, {
+                        user: context.userId,
+                        message: message,
+                      });
+                    }
                     setMessage("");
-                  }
-                }}
-              ></TextField>
+                  }}
+                >
+                  <SendIcon></SendIcon>
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={3}>
-              <Button
-                color="primary"
-                // variant="outlined"
-                fullWidth
-                onClick={(event) => {
-                  if (message !== "") {
-                    publish(`vgig/${context.hallId}/audience/chat`, {
-                      user: context.userId,
-                      message: message,
-                    });
-                  }
-                  setMessage("");
-                }}
-              >
-                <SendIcon></SendIcon>
-              </Button>
-            </Grid>
-          </Grid>
-        </Input>
+          </Input>
+        )}
       </Section>
     </Container>
   );

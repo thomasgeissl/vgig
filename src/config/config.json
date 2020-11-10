@@ -49,5 +49,6 @@
             "color": "#bdb2ff",
             "logText": "is singing along."
           }
-    ]
+    ],
+    "chat": false
 }
