@@ -71,7 +71,7 @@ export default ({ onClose }) => {
         color={"rgb(46, 94, 160)"}
         onClose={onClose}
       >
-        {config.chat && (
+        {(config.chat || config.console) && (
           <>
             <FormControlLabel
               control={

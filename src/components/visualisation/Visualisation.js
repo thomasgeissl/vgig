@@ -1,29 +1,29 @@
-import React, { useState, useEffect, useRef, createRef } from "react";
+import React, { useRef } from "react";
 import { useFrame } from "react-three-fiber";
 import { Text } from "@react-three/drei/Text";
 
 import Floor from "./Floor";
 import Stage from "./Stage";
 
-const Particle = ({ position }) => {
-  const mesh = useRef(null);
-  useFrame(() => {
-    mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
-    // console.log("new frame", analyzer.getValue())
-  });
-  return (
-    <mesh position={position} ref={mesh}>
-      <boxBufferGeometry
-        attach="geometry"
-        args={[0.01, 0.01, 0.01]}
-      ></boxBufferGeometry>
-      <meshStandardMaterial
-        attach="material"
-        color="lightblue"
-      ></meshStandardMaterial>
-    </mesh>
-  );
-};
+// const Particle = ({ position }) => {
+//   const mesh = useRef(null);
+//   useFrame(() => {
+//     mesh.current.rotation.x = mesh.current.rotation.y += 0.01;
+//     // console.log("new frame", analyzer.getValue())
+//   });
+//   return (
+//     <mesh position={position} ref={mesh}>
+//       <boxBufferGeometry
+//         attach="geometry"
+//         args={[0.01, 0.01, 0.01]}
+//       ></boxBufferGeometry>
+//       <meshStandardMaterial
+//         attach="material"
+//         color="lightblue"
+//       ></meshStandardMaterial>
+//     </mesh>
+//   );
+// };
 
 const particles = [...Array(1024)];
 
@@ -38,9 +38,6 @@ export default ({ analyser }) => {
       particleRefs.current.push(el);
     }
   };
-  // particleRefs.current = [...Array(1024)].map(
-  //   (ref, index) => (particleRefs.current[index] = createRef())
-  // );
 
   useFrame(() => {
     const values = analyser.getValue();
@@ -49,11 +46,13 @@ export default ({ analyser }) => {
       values.forEach((value) => (sum += value));
       testTextRef.current.scale.x = sum / 1024;
     }
-    // console.log(particleRefs.current[0]);
     particleRefs.current.forEach((ref, index) => {
       if (ref) {
-        // console.log("update particle", ref, index);
-        ref.scale.y = values[index] * 0.005;
+        // console.log(values[index]);
+        // if (values[index] > 0) {
+        // console.log("scale band");
+        ref.scale.x = values[index] * 0.05;
+        // }
       }
     });
   });
@@ -88,20 +87,35 @@ export default ({ analyser }) => {
       })} */}
 
       {particles.map((item, index) => {
-        const width = 50;
-        const x = (index / 1024) * width - width / 2;
+        const width = 40;
+        // const x = (index / 1024) * width - width / 2;
+        const r = 30;
+        const theta = (index / particles.length) * Math.PI * 2;
+        const x = Math.cos(theta) * r;
+        const z = Math.sin(theta) * r;
+        const y = 2;
+        const position = [x, y, z];
         return (
-          <Text
-            key={index}
-            ref={addToRefs}
-            color="white" // default
-            anchorX="center" // default
-            anchorY="middle" // default
-            position={[x, 0, 0]}
-            fontSize={2}
-          >
-            wstg
-          </Text>
+          <mesh key={index} position={position} ref={addToRefs}>
+            <boxBufferGeometry
+              attach="geometry"
+              args={[0.01, 0.01, 0.01]}
+            ></boxBufferGeometry>
+            <meshStandardMaterial
+              attach="material"
+              color="lightblue"
+            ></meshStandardMaterial>
+          </mesh>
+          // <Text
+          //   key={index}
+          //   color="#101010" // default
+          //   anchorX="center" // default
+          //   anchorY="middle" // default
+          //   position={[x, y, z]}
+          //   fontSize={2}
+          // >
+          //   wstg
+          // </Text>
           // <Particle
           //   key={index}
           //   position={[x, 0, 5]}
@@ -112,7 +126,7 @@ export default ({ analyser }) => {
         );
       })}
 
-      <Floor></Floor>
+      <Floor position={[0, 0, 0]}></Floor>
       <Stage></Stage>
 
       <mesh>

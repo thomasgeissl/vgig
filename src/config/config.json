@@ -1,4 +1,5 @@
 {
+    "broker": "wss://audience:audience@v-gig.com:8081",
     "orchestra": [],
     "actions": [
         {
@@ -50,5 +51,8 @@
             "logText": "is singing along."
           }
     ],
-    "chat": false
+    "maxOrchestraVolume": 16,
+    "maxActionVolume": 16,
+    "chat": false,
+    "console": false
 }

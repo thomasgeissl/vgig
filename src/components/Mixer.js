@@ -12,6 +12,8 @@ import {
 import Section from "./Section";
 import Button from "./Button";
 
+import config from "../config/config.json";
+
 const Container = styled.div`
   background-color: black;
   display: flex;
@@ -65,7 +67,7 @@ export default () => {
                     //   getAriaValueText={valuetext}
                     defaultValue={-100}
                     min={-32}
-                    max={0}
+                    max={config.maxOrchestraVolume}
                     value={stageVolume}
                     onChange={(event, value) => {
                       dispatch(setVolumeStage(value));
@@ -80,7 +82,7 @@ export default () => {
                   //   getAriaValueText={valuetext}
                   defaultValue={-100}
                   min={-32}
-                  max={0}
+                  max={config.maxActionVolume}
                   value={interactionsVolume}
                   onChange={(event, value) => {
                     dispatch(setVolumeInteractions(value));

@@ -24,6 +24,9 @@ import { addMessage } from "../store/reducers/chat";
 
 import Chat from "./Chat";
 
+import { addUser, setUsers, heartBeat } from "../store/reducers/users";
+import store from "../store";
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -68,15 +71,45 @@ export default () => {
     if (subscribed) return;
     setSubscribed(true);
     console.log("subscribing to hall topics");
-    publish(`${NAME}/${id}/audience/enterLobby`, {
-      userId: context.userId,
+
+    subscribe(`${NAME}/${id}/audience/getUsers`, (topic, message) => {
+      console.log(topic, message);
     });
+    subscribe(`${NAME}/${id}/audience/getUsers`, (topic, message) => {
+      console.log(`${message.from} requested to get users`);
+      if (message.from && message.from !== context.userId) {
+        console.log(`${message.from} requested to get users`);
+        publish(
+          `${NAME}/${id}/audience/setUsers`,
+          store.getState().users.users
+        );
+      }
+    });
+    subscribe(`${NAME}/${id}/audience/setUsers`, (topic, message) => {
+      dispatch(setUsers(message));
+    });
+    subscribe(`${NAME}/${id}/audience/enterLobby`, (topic, message) => {
+      dispatch(addUser(message.userId, "anonymous "));
+    });
+
+    subscribe(`${NAME}/${id}/audience/alive`, (topic, message) => {
+      dispatch(heartBeat(message.userId));
+    });
+
     subscribe(`${NAME}/${id}/audience/setUserName`, (topic, message) => {
       dispatch(setName(message.id, message.name));
     });
     subscribe(`${NAME}/${id}/audience/chat`, (topic, message) => {
       dispatch(addMessage(message.user, message.message));
     });
+
+    publish(`${NAME}/${id}/audience/getUsers`, { from: context.userId });
+    publish(`${NAME}/${id}/audience/enterLobby`, {
+      userId: context.userId,
+    });
+    setInterval(() => {
+      publish(`${NAME}/${id}/audience/alive`, { userId: context.userId });
+    }, 30 * 1000);
   }, [id, subscribed, subscribe, publish, setSubscribed, dispatch, context]);
 
   return (

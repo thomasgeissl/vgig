@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Provider as StoreProvider, useSelector } from "react-redux";
 import styled from "styled-components";
-import { Analyser, Destination, Sampler, Channel, now } from "tone";
+import { Analyser, Destination, Sampler, Channel, now, Gain } from "tone";
 import { status as statusTypes } from "../midi";
 import Visualisation from "./visualisation/Visualisation";
 import Lights from "./visualisation/Lights";
 import { Canvas } from "react-three-fiber";
+import { Physics } from "@react-three/cannon";
 import { OrbitControls } from "drei";
 import { useClient } from "../mqttConnection";
 
@@ -74,6 +75,7 @@ export default ({ id }) => {
     samples.forEach((sample, index) => {
       instruments.push(new Sampler({ C3: sample }));
       instruments[index].attack = 0;
+      instruments[index].sustain = 1;
       instruments[index].release = 1.3;
       instruments[index].connect(channel);
     });
@@ -110,16 +112,17 @@ export default ({ id }) => {
     <Container>
       <Canvas
         style={{ background: "rgb(0,0,0)" }}
-        camera={{ position: [0, 0, 10], fov: 45 }}
+        camera={{ position: [0, 0, 20], fov: 45, far: 30 }}
         colorManagement
       >
         <OrbitControls></OrbitControls>
         <Lights></Lights>
-
-        <Visualisation analyser={analyser}></Visualisation>
-        <StoreProvider store={store}>
-          <PostProcessing></PostProcessing>
-        </StoreProvider>
+        <Physics>
+          <Visualisation analyser={analyser}></Visualisation>
+          <StoreProvider store={store}>
+            <PostProcessing></PostProcessing>
+          </StoreProvider>
+        </Physics>
       </Canvas>
     </Container>
   );

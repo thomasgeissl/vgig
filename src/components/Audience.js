@@ -23,8 +23,8 @@ const Users = styled.div`
 const User = styled.div`
   height: 25px;
   width: 25px;
-  background-color: ${({ action }) => {
-    let color = "rgb(64,64,64)";
+  background-color: ${({ action, active }) => {
+    let color = active ? "rgb(127,127,127)" : "rgb(64,64,64)";
     actions.forEach((item) => {
       if (item.id === action) {
         color = item.color;
@@ -70,29 +70,6 @@ export default ({ id }) => {
       setSubscribed(true);
       if (id) {
         console.log("subscribing to audience topics");
-        subscribe(`${NAME}/${id}/audience/getUsers`, (topic, message) => {
-          if (message.from && message.from !== context.userId) {
-            publish(
-              `${NAME}/${id}/audience/setUsers`,
-              store.getState().users.users
-            );
-          }
-        });
-        subscribe(`${NAME}/${id}/audience/setUsers`, (topic, message) => {
-          dispatch(setUsers(message));
-        });
-        subscribe(`${NAME}/${id}/audience/enterLobby`, (topic, message) => {
-          dispatch(addUser(message.userId, "anonymous "));
-        });
-
-        subscribe(`${NAME}/${id}/audience/alive`, (topic, message) => {
-          dispatch(heartBeat(message.userId));
-        });
-
-        publish(`${NAME}/${id}/audience/getUsers`, { from: context.userId });
-        setInterval(() => {
-          publish(`${NAME}/${id}/alive`, { userId: context.userId });
-        }, 30 * 1000);
       }
     },
     [subscribed, setSubscribed, id, subscribe, dispatch, context],

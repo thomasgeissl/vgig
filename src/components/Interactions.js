@@ -102,8 +102,8 @@ export default () => {
         `${NAME}/${context.hallId}/audience/${action.id}`,
         (topic, message) => {
           sfx[index].triggerAttackRelease(
-            40 + Math.round(Math.random() * 60),
-            20
+            60 + Math.round(Math.random() * 12),
+            40
           );
           dispatch(addToHistory(message.userId, action.logText));
           dispatch(setCurrentAction(message.userId, action.id));

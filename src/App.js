@@ -4,6 +4,7 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import styled from "styled-components";
 
 import Home from "./components/Home";
+import Admin from "./components/Admin";
 import Hall from "./components/Hall";
 import Context, { Provider as ContextProvider } from "./Context";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -23,6 +24,11 @@ export default () => {
         <StoreProvider store={store}>
           <Router>
             <Switch>
+              <Route path="/halls/:id/admin">
+                <ContextProvider value={Context}>
+                  <Admin></Admin>
+                </ContextProvider>
+              </Route>
               <Route path="/halls/:id">
                 <ContextProvider value={Context}>
                   <Hall />
