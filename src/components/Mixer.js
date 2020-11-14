@@ -72,7 +72,7 @@ export default () => {
                     onChange={(event, value) => {
                       dispatch(setVolumeStage(value));
                     }}
-                    label={"orchestra"}
+                    label={"music"}
                   />
                 </SliderContainer>
               </Grid>

@@ -1,9 +1,13 @@
 import React, { useRef } from "react";
+import { Vector3 } from "three";
 import { useFrame } from "react-three-fiber";
 import { Text } from "@react-three/drei/Text";
 
 import Floor from "./Floor";
 import Stage from "./Stage";
+import Terrain from "./Terrain";
+
+import config from "../../config/config";
 
 // const Particle = ({ position }) => {
 //   const mesh = useRef(null);
@@ -27,7 +31,34 @@ import Stage from "./Stage";
 
 const particles = [...Array(1024)];
 
-export default ({ analyser }) => {
+export default ({ analyser, mood }) => {
+  const seed = 1;
+  const size = 170;
+  const height = 0.6;
+  const scale = 10;
+  const levels = 10;
+
+  let max = 0;
+  let maxKey;
+  mood.forEach((value, key) => {
+    if (key && key !== "") {
+      max = Math.max(value, max);
+      if (max === value) {
+        maxKey = key;
+      }
+    }
+  });
+  console.log(maxKey);
+  let color = "white";
+  if (maxKey && maxKey !== "") {
+    config.actions.forEach((action) => {
+      if (action.id === maxKey) {
+        color = action.color;
+      }
+    });
+  }
+  // const color =
+
   const testTextRef = useRef(null);
 
   const particleRefs = useRef([]);
@@ -61,17 +92,36 @@ export default ({ analyser }) => {
   //   console.log("add to refs", el);
   // };
 
+  function Thing({ vertices, color }) {
+    return (
+      <group ref={(ref) => console.log("we have access to the instance")}>
+        <line>
+          <geometry
+            name="geometry"
+            vertices={vertices.map((v) => new Vector3(...v))}
+            onUpdate={(self) => (self.verticesNeedUpdate = true)}
+          />
+          <lineBasicMaterial name="material" color="white" />
+        </line>
+        {/* <mesh
+          onClick={(e) => console.log("click")}
+          onHover={(e) => console.log("hover")}
+          onUnhover={(e) => console.log("unhover")}
+        >
+          <octahedronGeometry name="geometry" />
+          <meshBasicMaterial
+            name="material"
+            color="peachpuff"
+            opacity={0.5}
+            transparent
+          />
+        </mesh> */}
+      </group>
+    );
+  }
+
   return (
     <>
-      <Text
-        ref={testTextRef}
-        color="white" // default
-        anchorX="center" // default
-        anchorY="middle" // default
-      >
-        here will be an audio visualisation
-      </Text>
-
       <Text
         color="purple" // default
         anchorX="center" // default
@@ -80,11 +130,6 @@ export default ({ analyser }) => {
       >
         WSTG
       </Text>
-      {/* {particles.map((item, index) => {
-        console.log("test");
-
-        );
-      })} */}
 
       {particles.map((item, index) => {
         const width = 40;
@@ -127,11 +172,14 @@ export default ({ analyser }) => {
       })}
 
       <Floor position={[0, 0, 0]}></Floor>
-      <Stage></Stage>
-
-      <mesh>
-        <bufferGeometry></bufferGeometry>
-      </mesh>
+      <Terrain
+        seed={seed}
+        size={Math.floor(size)}
+        height={height}
+        levels={Math.floor(levels)}
+        scale={scale}
+        color={color}
+      ></Terrain>
     </>
   );
 };

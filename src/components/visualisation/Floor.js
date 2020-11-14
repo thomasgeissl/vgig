@@ -18,12 +18,12 @@ export default (props) => {
   //     </mesh>
   return (
     <mesh ref={ref} receiveShadow>
-      <planeBufferGeometry attach="geometry" args={[1009, 1000]} />
-      <meshStandardMaterial
+      <planeBufferGeometry attach="geometry" args={[10000, 10000]} />
+      {/* <meshStandardMaterial
         attach="material"
         color="rgb(64,32,32)"
-      ></meshStandardMaterial>
-      {/* <shadowMaterial attach="material" color="#171717" /> */}
+      ></meshStandardMaterial> */}
+      <shadowMaterial attach="material" color="#171717" />
     </mesh>
   );
 };

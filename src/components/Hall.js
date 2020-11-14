@@ -26,7 +26,7 @@ import Chat from "./Chat";
 
 import { addUser, setUsers, heartBeat } from "../store/reducers/users";
 import store from "../store";
-
+import config from "../config/config.json";
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -114,18 +114,20 @@ export default () => {
 
   return (
     <Container>
-      <AppBar position="sticky" style={{ backgroundColor: "transparent" }}>
-        <Toolbar>
-          <IconButton
-            color="primary"
-            onClick={(event) => {
-              setShowConsole(!showConsole);
-            }}
-          >
-            <ForumIcon></ForumIcon>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      {(config.chat || config.console) && (
+        <AppBar position="sticky" style={{ backgroundColor: "transparent" }}>
+          <Toolbar>
+            <IconButton
+              color="primary"
+              onClick={(event) => {
+                setShowConsole(!showConsole);
+              }}
+            >
+              <ForumIcon></ForumIcon>
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      )}
       <StyledModal open={open}>
         <ModalContent>
           <Lobby

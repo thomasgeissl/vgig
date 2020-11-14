@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { BoxBufferGeometry, MeshNormalMaterial } from "three";
+import { BoxBufferGeometry, MeshNormalMaterial, Vector3 } from "three";
 import { useFrame, useThree } from "react-three-fiber";
 
 const SLOWDOWN = 1;

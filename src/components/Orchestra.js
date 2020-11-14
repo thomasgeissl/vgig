@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Provider as StoreProvider, useSelector } from "react-redux";
 import styled from "styled-components";
-import { Analyser, Destination, Sampler, Channel, now, Gain } from "tone";
+import { Analyser, Destination, Sampler, Channel, now } from "tone";
 import { status as statusTypes } from "../midi";
-import Visualisation from "./visualisation/Visualisation";
-import Lights from "./visualisation/Lights";
 import { Canvas } from "react-three-fiber";
 import { Physics } from "@react-three/cannon";
 import { OrbitControls } from "drei";
 import { useClient } from "../mqttConnection";
 
+import Visualisation from "./visualisation/Visualisation";
+import Lights from "./visualisation/Lights";
 import PostProcessing from "./visualisation/PostProcessing";
 import { NAME } from "../constants";
 import store from "../store";
@@ -56,6 +56,17 @@ const Container = styled.div`
 `;
 
 export default ({ id }) => {
+  const users = useSelector((state) => state.users.users);
+  const visulationsMode = useSelector((state) => state.visualisation.mode);
+  const mood = new Map();
+  users.forEach((user) => {
+    mood.set(
+      user.currentAction,
+      mood.get(user.currentAction) ? mood.get(user.currentAction) + 1 : 1
+    );
+  });
+  console.log(mood);
+
   const [channel, setChannel] = useState(null);
   const [instruments, setInstruments] = useState(null);
   const [analyser, setAnalyser] = useState(null);
@@ -110,16 +121,14 @@ export default ({ id }) => {
   // });
   return (
     <Container>
-      <Canvas
-        style={{ background: "rgb(0,0,0)" }}
-        camera={{ position: [0, 0, 20], fov: 45, far: 30 }}
-        colorManagement
-      >
+      <Canvas camera={{ fov: 100, position: [-1, 3, -5], rotateY: 45 }}>
         <OrbitControls></OrbitControls>
         <Lights></Lights>
         <Physics>
-          <Visualisation analyser={analyser}></Visualisation>
           <StoreProvider store={store}>
+            {visulationsMode === 0 && (
+              <Visualisation analyser={analyser} mood={mood}></Visualisation>
+            )}
             <PostProcessing></PostProcessing>
           </StoreProvider>
         </Physics>
