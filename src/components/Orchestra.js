@@ -52,7 +52,7 @@ const samples = [
 
 const Container = styled.div`
   width: 100%;
-  height: 66.66%;
+  height: 100%;
 `;
 
 export default ({ id }) => {
@@ -121,7 +121,7 @@ export default ({ id }) => {
   // });
   return (
     <Container>
-      <Canvas camera={{ fov: 100, position: [-1, 3, -5], rotateY: 45 }}>
+      <Canvas camera={{ fov: 100, position: [4, 3, 5] }}>
         <OrbitControls></OrbitControls>
         <Lights></Lights>
         <Physics>

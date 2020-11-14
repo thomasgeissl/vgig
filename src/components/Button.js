@@ -37,7 +37,7 @@ const Button = ({ label, borderColor, onClick }) => {
     <Container>
       <RoundButton onClick={onClick} borderColor={borderColor}></RoundButton>
       <br></br>
-      <Label>{label}</Label>
+      {/* <Label>{label}</Label> */}
     </Container>
   );
 };

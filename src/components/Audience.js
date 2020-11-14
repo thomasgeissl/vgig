@@ -15,6 +15,7 @@ const actions = config.actions;
 const Container = styled.div`
   margin-top: 16px;
   margin-bottom: 16px;
+  background-color: transparent;
 `;
 
 const Users = styled.div`

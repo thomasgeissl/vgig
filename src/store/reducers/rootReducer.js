@@ -1,17 +1,17 @@
 import { combineReducers } from "redux";
 
-import audioAnalysis from "./audioAnalysis";
+import visualisation from "./visualisation";
 import users from "./users";
 import mixer from "./mixer";
 import chat from "./chat";
 import console from "./console";
 
 const appReducer = combineReducers({
-  audioAnalysis,
   users,
   mixer,
   chat,
   console,
+  visualisation,
 });
 
 export default (state, action) => {

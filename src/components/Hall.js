@@ -30,6 +30,12 @@ import config from "../config/config.json";
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  background-color: transparent;
+`;
+const Desk = styled.div`
+  width: 100%;
+  position: absolute;
+  bottom: 0;
   background-color: black;
 `;
 
@@ -143,15 +149,17 @@ export default () => {
       </StyledModal>
       <>
         <Orchestra id={id}></Orchestra>
-        <Audience id={id}></Audience>
-        <Grid container>
-          <Grid item xs={12} sm={8}>
-            <Interactions id={id}></Interactions>
+        <Desk>
+          <Audience id={id}></Audience>
+          <Grid container>
+            <Grid item xs={12} sm={8}>
+              <Interactions id={id}></Interactions>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Mixer></Mixer>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <Mixer></Mixer>
-          </Grid>
-        </Grid>
+        </Desk>
         {showConsole && (
           <StyledChat
             onClose={() => {

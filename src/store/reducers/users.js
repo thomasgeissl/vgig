@@ -1,3 +1,9 @@
+import config from "../../config/config.json";
+const initialMood = new Map();
+config.actions.forEach((action) => {
+  initialMood[action.id] = 5;
+});
+
 const types = {
   ADDUSER: "ADDUSER",
   SETUSERS: "SETUSERS",
@@ -10,6 +16,7 @@ const types = {
 const defaultState = {
   users: [], //all users
   heartBeats: new Map(),
+  mood: initialMood,
 };
 
 export default (state = defaultState, action) => {
@@ -98,9 +105,14 @@ export default (state = defaultState, action) => {
           users[index].currentAction = action.payload.action;
         }
       });
+      const mood = initialMood;
+      users.forEach((user, index) => {
+        mood[user.currentAction] = mood[user.currentAction] + 1;
+      });
       return {
         ...state,
         users,
+        mood,
       };
     }
     case types.UNSETCURRENTACTION: {

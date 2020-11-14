@@ -44,6 +44,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const Desk = styled.div`
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+`;
 
 const channel = new Channel(-32);
 const volumeNode = new Volume(0);

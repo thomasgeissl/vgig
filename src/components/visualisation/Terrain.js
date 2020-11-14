@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { useUpdate } from "react-three-fiber";
+import { useUpdate, useFrame } from "react-three-fiber";
 import SimplexNoise from "simplex-noise";
 
 const generateTerrain = (simplex, size, height, levels, scale, offset) => {
@@ -29,6 +29,7 @@ const Terrain = ({
   scale = 1,
   offset = { x: 0, z: 0 },
   color,
+  analyser,
 }) => {
   const simplex = useMemo(() => new SimplexNoise(seed), [seed]);
 
@@ -46,6 +47,15 @@ const Terrain = ({
     },
     [size, height, levels, scale, offset, seed]
   );
+  useFrame(() => {
+    const fft = analyser.getValue();
+    console.log(fft, geometryRef.current.vertices.length);
+    fft.forEach((value, index) => {
+      geometryRef.current.vertices[index].y = Math.abs(value * -0.008) * 2;
+      //   console.log(index, value);
+    });
+    geometryRef.current.elementsNeedUpdate = true;
+  });
 
   return (
     <mesh>
