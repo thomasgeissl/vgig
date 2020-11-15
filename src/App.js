@@ -14,6 +14,7 @@ import store from "./store";
 
 import Audio from "./components/test/Audio";
 import Visual from "./components/test/Visual";
+import Connection from "./components/test/Connection";
 
 const App = styled.div`
   width: 100vw;
@@ -32,6 +33,9 @@ export default () => {
               </Route>
               <Route path="/test/visual">
                 <Visual></Visual>
+              </Route>
+              <Route path="/test/connection">
+                <Connection></Connection>
               </Route>
               <Route path="/halls/:id/admin">
                 <ContextProvider value={Context}>
