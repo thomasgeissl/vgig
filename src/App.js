@@ -13,6 +13,7 @@ import theme from "./theme";
 import store from "./store";
 
 import Audio from "./components/test/Audio";
+import Visual from "./components/test/Visual";
 
 const App = styled.div`
   width: 100vw;
@@ -28,6 +29,9 @@ export default () => {
             <Switch>
               <Route path="/test/audio">
                 <Audio></Audio>
+              </Route>
+              <Route path="/test/visual">
+                <Visual></Visual>
               </Route>
               <Route path="/halls/:id/admin">
                 <ContextProvider value={Context}>
