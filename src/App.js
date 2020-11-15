@@ -12,6 +12,8 @@ import theme from "./theme";
 
 import store from "./store";
 
+import Audio from "./components/test/Audio";
+
 const App = styled.div`
   width: 100vw;
   height: 100vh;
@@ -24,6 +26,9 @@ export default () => {
         <StoreProvider store={store}>
           <Router>
             <Switch>
+              <Route path="/test/audio">
+                <Audio></Audio>
+              </Route>
               <Route path="/halls/:id/admin">
                 <ContextProvider value={Context}>
                   <Admin></Admin>
