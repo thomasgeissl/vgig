@@ -42,7 +42,7 @@ export default () => {
     <Container>
       <Grid container>
         <Grid item xs={6}>
-          <Section title={"light"} color={"rgb(220, 46, 40)"}>
+          <Section title={"visual"} color={"rgb(220, 46, 40)"}>
             <Grid container>
               <Grid item xs={2}>
                 <Button
