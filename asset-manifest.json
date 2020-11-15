@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/vgig/static/css/main.d2becfe2.chunk.css",
-    "main.js": "/vgig/static/js/main.252a07b5.chunk.js",
-    "main.js.map": "/vgig/static/js/main.252a07b5.chunk.js.map",
-    "runtime-main.js": "/vgig/static/js/runtime-main.41057a94.js",
-    "runtime-main.js.map": "/vgig/static/js/runtime-main.41057a94.js.map",
-    "static/js/2.41af8143.chunk.js": "/vgig/static/js/2.41af8143.chunk.js",
-    "static/js/2.41af8143.chunk.js.map": "/vgig/static/js/2.41af8143.chunk.js.map",
-    "static/js/3.ec7cc74d.chunk.js": "/vgig/static/js/3.ec7cc74d.chunk.js",
-    "static/js/3.ec7cc74d.chunk.js.map": "/vgig/static/js/3.ec7cc74d.chunk.js.map",
+    "main.js": "/vgig/static/js/main.230854e2.chunk.js",
+    "main.js.map": "/vgig/static/js/main.230854e2.chunk.js.map",
+    "runtime-main.js": "/vgig/static/js/runtime-main.416beb49.js",
+    "runtime-main.js.map": "/vgig/static/js/runtime-main.416beb49.js.map",
+    "static/js/2.2bf7d8b1.chunk.js": "/vgig/static/js/2.2bf7d8b1.chunk.js",
+    "static/js/2.2bf7d8b1.chunk.js.map": "/vgig/static/js/2.2bf7d8b1.chunk.js.map",
+    "static/js/3.bd4dc846.chunk.js": "/vgig/static/js/3.bd4dc846.chunk.js",
+    "static/js/3.bd4dc846.chunk.js.map": "/vgig/static/js/3.bd4dc846.chunk.js.map",
     "index.html": "/vgig/index.html",
-    "precache-manifest.8742734ced06e30ba4fa97ab2eb84cc3.js": "/vgig/precache-manifest.8742734ced06e30ba4fa97ab2eb84cc3.js",
+    "precache-manifest.4fe88ce80582e73cf3af7b32eec5d93a.js": "/vgig/precache-manifest.4fe88ce80582e73cf3af7b32eec5d93a.js",
     "service-worker.js": "/vgig/service-worker.js",
     "static/css/main.d2becfe2.chunk.css.map": "/vgig/static/css/main.d2becfe2.chunk.css.map",
-    "static/js/2.41af8143.chunk.js.LICENSE.txt": "/vgig/static/js/2.41af8143.chunk.js.LICENSE.txt",
+    "static/js/2.2bf7d8b1.chunk.js.LICENSE.txt": "/vgig/static/js/2.2bf7d8b1.chunk.js.LICENSE.txt",
     "static/media/1.mp3": "/vgig/static/media/1.c45d7231.mp3",
     "static/media/10.mp3": "/vgig/static/media/10.addb6c15.mp3",
     "static/media/11.mp3": "/vgig/static/media/11.35a178a5.mp3",
@@ -33,9 +33,9 @@
     "static/media/enter.mp3": "/vgig/static/media/enter.339b495d.mp3"
   },
   "entrypoints": [
-    "static/js/runtime-main.41057a94.js",
-    "static/js/2.41af8143.chunk.js",
+    "static/js/runtime-main.416beb49.js",
+    "static/js/2.2bf7d8b1.chunk.js",
     "static/css/main.d2becfe2.chunk.css",
-    "static/js/main.252a07b5.chunk.js"
+    "static/js/main.230854e2.chunk.js"
   ]
 }
