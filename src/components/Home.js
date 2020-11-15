@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import {context} from "tone";
+import { context } from "tone";
 import styled from "styled-components";
 
 import pc from "../../package.json";
@@ -49,12 +49,16 @@ export default () => {
         Welcome to vgig,<br></br>the virtual concert hall for everyone.
       </Intro>
       <RoomChooser>
-        <p>
-        </p>
+        <p></p>
         <Door>
           <TextField
             value={room}
             onChange={(event) => setRoom(event.target.value)}
+            onKeyPress={(event) => {
+              if (event.key === "Enter" && room !== "") {
+                history.push(`/halls/${room}`);
+              }
+            }}
           ></TextField>
           <Button
             onClick={() => {

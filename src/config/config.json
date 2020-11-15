@@ -54,5 +54,8 @@
     "maxOrchestraVolume": 16,
     "maxActionVolume": 16,
     "chat": false,
-    "console": false
+    "console": false,
+    "style": {
+      "showLabels": false
+    }
 }

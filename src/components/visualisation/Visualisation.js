@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import Terrain from "./Terrain";
 import WSTG from "./WSTG";
 import config from "../../config/config";
@@ -20,7 +20,6 @@ export default ({ analyser, mood }) => {
       }
     }
   });
-  console.log(maxKey);
   let color = "white";
   if (maxKey && maxKey !== "") {
     config.actions.forEach((action) => {

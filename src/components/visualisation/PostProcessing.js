@@ -8,11 +8,13 @@ import {
   Noise,
   Vignette,
   Glitch,
+  Pixelation,
 } from "@react-three/postprocessing";
 import { GlitchMode } from "postprocessing";
 
 export default () => {
   const glitch = useSelector((state) => state.mixer.glitch);
+  const pixelation = useSelector((state) => state.mixer.pixelation);
   return (
     <EffectComposer>
       <DepthOfField
@@ -32,6 +34,7 @@ export default () => {
         ratio={0.48} // Threshold for strong glitches, 0 - no weak glitches, 1 - no strong glitches.
         active={glitch}
       />
+      <Pixelation granularity={pixelation} />
     </EffectComposer>
   );
 };

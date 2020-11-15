@@ -49,11 +49,10 @@ const Terrain = ({
   );
   useFrame(() => {
     const fft = analyser.getValue();
-    console.log(fft, geometryRef.current.vertices.length);
     fft.forEach((value, index) => {
       geometryRef.current.vertices[index].y = Math.abs(value * -0.008) * 2;
-      //   console.log(index, value);
     });
+    geometryRef.current.rotateY += 0.03;
     geometryRef.current.elementsNeedUpdate = true;
   });
 

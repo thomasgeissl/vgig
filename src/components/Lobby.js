@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useClient } from "../mqttConnection";
 import { NAME } from "../constants";
 import Context from "../Context";
+import { start } from "tone";
 
 const Container = styled.div``;
 const Actions = styled.section`
@@ -37,6 +38,7 @@ export default ({ onEnter }) => {
               name,
             });
             setName("");
+            start();
             onEnter(name);
           }
         }}
@@ -54,6 +56,7 @@ export default ({ onEnter }) => {
               name,
             });
             setName("");
+            start();
             onEnter(name);
           }}
         >

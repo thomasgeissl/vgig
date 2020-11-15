@@ -10,7 +10,7 @@ const Container = styled.div`
   ${(props) =>
     props.color &&
     css`
-      border-bottom: 3px solid ${props.color};
+      /* border-bottom: 3px solid ${props.color}; */
       border-left: 1px solid white;
       border-right: 1px solid white;
     `}

@@ -4,11 +4,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import styled from "styled-components";
 import { useClient } from "../mqttConnection";
 import { NAME } from "../constants";
-import { publish } from "../mqtt";
 import Context from "../Context";
 
-import { addUser, setUsers, heartBeat } from "../store/reducers/users";
-import store from "../store";
 import config from "../config/config.json";
 const actions = config.actions;
 
