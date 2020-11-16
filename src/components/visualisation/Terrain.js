@@ -21,6 +21,7 @@ const generateTerrain = (simplex, size, height, levels, scale, offset) => {
   });
 };
 
+let frameCounter = 0;
 const Terrain = ({
   seed,
   size,
@@ -48,12 +49,15 @@ const Terrain = ({
     [size, height, levels, scale, offset, seed]
   );
   useFrame(() => {
-    const fft = analyser.getValue();
-    fft.forEach((value, index) => {
-      geometryRef.current.vertices[index].y = Math.abs(value * -0.008) * 2;
-    });
-    geometryRef.current.rotateY += 0.03;
-    geometryRef.current.elementsNeedUpdate = true;
+    frameCounter++;
+    if (frameCounter % 3 === 0) {
+      const fft = analyser.getValue();
+      fft.forEach((value, index) => {
+        geometryRef.current.vertices[index].y = Math.abs(value * -0.008) * 2;
+      });
+      geometryRef.current.rotateY += 0.03;
+      geometryRef.current.elementsNeedUpdate = true;
+    }
   });
 
   return (
