@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Provider as StoreProvider, useSelector } from "react-redux";
 import styled from "styled-components";
-import { Analyser, Destination, Sampler, Channel, now } from "tone";
+import { Analyser, Destination, Sampler, Channel, now, Volume } from "tone";
 import { status as statusTypes } from "../midi";
 import { Canvas } from "react-three-fiber";
 import { Physics } from "@react-three/cannon";
@@ -55,6 +55,9 @@ const Container = styled.div`
   height: 100%;
 `;
 
+const channel = new Volume(0);
+channel.connect(Destination);
+
 export default ({ id }) => {
   const users = useSelector((state) => state.users.users);
   const visulationsMode = useSelector((state) => state.visualisation.mode);
@@ -66,7 +69,7 @@ export default ({ id }) => {
     );
   });
 
-  const [channel, setChannel] = useState(null);
+  // const [channel, setChannel] = useState(null);
   const [instruments, setInstruments] = useState(null);
   const [analyser, setAnalyser] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
@@ -79,8 +82,8 @@ export default ({ id }) => {
   }
 
   useEffect(() => {
-    const channel = new Channel(-32);
-    channel.connect(Destination);
+    // const channel = new Channel(-32);
+    // channel.connect(Destination);
     const instruments = [];
     samples.forEach((sample, index) => {
       instruments.push(new Sampler({ C3: sample }));
@@ -89,7 +92,7 @@ export default ({ id }) => {
       instruments[index].release = 1.3;
       instruments[index].connect(channel);
     });
-    setChannel(channel);
+    // setChannel(channel);
     setInstruments(instruments);
 
     const analyser = new Analyser("fft", 1024);

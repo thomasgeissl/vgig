@@ -45,15 +45,15 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const channel = new Channel(-32);
-const volumeNode = new Volume(0);
-channel.connect(volumeNode);
-volumeNode.connect(Destination);
+// const channel = new Channel(-32);
+// channel.connect(volumeNode);
+const channel = new Volume(0);
+channel.connect(Destination);
 
 export default () => {
   const [context] = useContext(Context);
   const { subscribe, publish } = useClient();
-  const [channel, setChannel] = useState(null);
+  // const [channel, setChannel] = useState(null);
   const [sfx, setSfx] = useState(null);
   const [enter, setEnter] = useState(null);
   const [leave, setLeave] = useState(null);
@@ -66,8 +66,8 @@ export default () => {
   }
 
   useEffect(() => {
-    const channel = new Channel(-32);
-    channel.connect(Destination);
+    // const channel = new Channel(-32);
+    // channel.connect(Destination);
     const instruments = [];
     samples.forEach((sample, index) => {
       instruments.push(new Sampler({ C3: sample }));
@@ -75,7 +75,7 @@ export default () => {
       instruments[index].release = 1.3;
       instruments[index].connect(channel);
     });
-    setChannel(channel);
+    // setChannel(channel);
     setSfx(instruments);
 
     const enter = new Sampler({ C3: EnterSample });
