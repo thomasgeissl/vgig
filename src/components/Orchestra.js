@@ -65,7 +65,6 @@ export default ({ id }) => {
       mood.get(user.currentAction) ? mood.get(user.currentAction) + 1 : 1
     );
   });
-  console.log(mood);
 
   const [channel, setChannel] = useState(null);
   const [instruments, setInstruments] = useState(null);

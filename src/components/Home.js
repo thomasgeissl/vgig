@@ -67,6 +67,7 @@ export default () => {
               }
               history.push(`/halls/${room}`);
             }}
+            variant="outlined"
           >
             enter
           </Button>

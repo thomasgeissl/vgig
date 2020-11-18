@@ -44,7 +44,7 @@ const StyledModal = styled(Modal)`
   height: 100%;
 `;
 const ModalContent = styled.div`
-  background-color: white;
+  background-color: black;
   display: flex;
   justify-content: center;
   align-items: center;

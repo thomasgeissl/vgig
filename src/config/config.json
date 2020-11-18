@@ -51,8 +51,8 @@
             "logText": "is singing along."
           }
     ],
-    "maxOrchestraVolume": 16,
-    "maxActionVolume": 16,
+    "maxOrchestraVolume": 6,
+    "maxActionVolume": 6,
     "chat": false,
     "console": false,
     "style": {

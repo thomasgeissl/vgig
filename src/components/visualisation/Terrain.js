@@ -52,8 +52,24 @@ const Terrain = ({
     frameCounter++;
     if (frameCounter % 3 === 0) {
       const fft = analyser.getValue();
+      const sum = fft.reduce(function (a, b) {
+        return a + b;
+      }, 0);
+      if (sum === -Infinity) {
+        // geometryRef.current.vertices[0].y = 5; //Math.abs(value * -0.008) * 2;
+        // geometryRef.current.vertices[31].y = 5; //Math.abs(value * -0.008) * 2;
+        // geometryRef.current.vertices[124].y = 5; //Math.abs(value * -0.008) * 2;
+        // geometryRef.current.vertices[1000].y = 5; //Math.abs(value * -0.008) * 2;
+        // geometryRef.current.vertices[1000].y = 5; //Math.abs(value * -0.008) * 2;
+        // geometryRef.current.elementsNeedUpdate = true;
+        return;
+      }
       fft.forEach((value, index) => {
-        geometryRef.current.vertices[index].y = Math.abs(value * -0.008) * 2;
+        const remainder = index % 32;
+        const mappedIndex = Math.floor(index / 32) + remainder * 32;
+        geometryRef.current.vertices[mappedIndex].y =
+          Math.abs(value * -0.008) * 2;
+        // geometryRef.current.vertices[index].y = Math.abs(value * -0.008) * 2;
       });
       geometryRef.current.rotateY += 0.03;
       geometryRef.current.elementsNeedUpdate = true;

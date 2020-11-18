@@ -13,7 +13,16 @@ const Actions = styled.section`
   display: flex;
   flex-direction: row-reverse;
 `;
+
+const Hello = styled.div`
+  margin-bottom: 24px;
+`;
 const EnterButton = styled(Button)``;
+const StyledTextField = styled(TextField)`
+  .MuiInput-input {
+    color: white;
+  }
+`;
 
 export default ({ onEnter }) => {
   const { publish } = useClient();
@@ -21,11 +30,13 @@ export default ({ onEnter }) => {
   const [context] = useContext(Context);
   return (
     <Container>
-      <div>
+      <Hello>
         hello, <br></br>please enter your name and enjoy the show.
-      </div>
-      <TextField
+      </Hello>
+      <StyledTextField
         fullWidth
+        autoFocus
+        color="primary"
         label="name"
         value={name}
         onChange={(event) => {
@@ -42,7 +53,7 @@ export default ({ onEnter }) => {
             onEnter(name);
           }
         }}
-      ></TextField>
+      ></StyledTextField>
       <br></br>
 
       <Actions>
