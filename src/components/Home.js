@@ -6,7 +6,16 @@ import { context } from "tone";
 import styled from "styled-components";
 
 import pc from "../../package.json";
+
 const version = pc.version;
+const StyledTextField = styled(TextField)`
+  .MuiInput-input {
+    color: white;
+  }
+  .MuiInputBase-input {
+    background-color: rgb(24, 24, 24);
+  }
+`;
 
 const Container = styled.div`
   max-width: 768px;
@@ -51,7 +60,7 @@ export default () => {
       <RoomChooser>
         <p></p>
         <Door>
-          <TextField
+          <StyledTextField
             value={room}
             onChange={(event) => setRoom(event.target.value)}
             onKeyPress={(event) => {
@@ -59,7 +68,8 @@ export default () => {
                 history.push(`/halls/${room}`);
               }
             }}
-          ></TextField>
+            autofocus
+          ></StyledTextField>
           <Button
             onClick={() => {
               if (context.state !== "running") {
@@ -67,6 +77,7 @@ export default () => {
               }
               history.push(`/halls/${room}`);
             }}
+            color="primary"
             variant="outlined"
           >
             enter

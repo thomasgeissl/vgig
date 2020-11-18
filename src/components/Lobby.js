@@ -22,6 +22,9 @@ const StyledTextField = styled(TextField)`
   .MuiInput-input {
     color: white;
   }
+  .MuiInputBase-input {
+    background-color: rgb(24, 24, 24);
+  }
 `;
 
 export default ({ onEnter }) => {
