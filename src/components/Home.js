@@ -68,7 +68,7 @@ export default () => {
                 history.push(`/halls/${room}`);
               }
             }}
-            autofocus
+            autoFocus
           ></StyledTextField>
           <Button
             onClick={() => {
