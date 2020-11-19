@@ -32,6 +32,10 @@ const SliderContainer = styled.div`
   height: 100%;
 `;
 
+const StyledSlider = styled(Slider)`
+  margin: 5px;
+`;
+
 export default () => {
   const dispatch = useDispatch();
   const stageVolume = useSelector((state) => state.mixer.volumeStage);
@@ -55,7 +59,7 @@ export default () => {
                   }}
                   label={"glitch"}
                 ></Button> */}
-                <Slider
+                <StyledSlider
                   orientation="vertical"
                   //   getAriaValueText={valuetext}
                   defaultValue={2}
@@ -76,7 +80,7 @@ export default () => {
             <Grid container style={{ height: "100%" }}>
               <Grid item xs={6}>
                 <SliderContainer>
-                  <Slider
+                  <StyledSlider
                     orientation="vertical"
                     //   getAriaValueText={valuetext}
                     defaultValue={-100}
@@ -91,7 +95,7 @@ export default () => {
                 </SliderContainer>
               </Grid>
               <Grid item xs={6}>
-                <Slider
+                <StyledSlider
                   orientation="vertical"
                   //   getAriaValueText={valuetext}
                   defaultValue={-100}
