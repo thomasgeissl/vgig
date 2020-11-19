@@ -7,6 +7,7 @@ import styled from "styled-components";
 import {
   setVolumeInteractions,
   setVolumeStage,
+  setIntensity,
   setGlitch,
 } from "../store/reducers/mixer";
 import Section from "./Section";
@@ -37,6 +38,7 @@ export default () => {
   const interactionsVolume = useSelector(
     (state) => state.mixer.volumeInteractions
   );
+  const intensity = useSelector((state) => state.mixer.intensity);
   const glitch = useSelector((state) => state.mixer.glitch);
   return (
     <Container>
@@ -44,15 +46,27 @@ export default () => {
         <Grid item xs={6}>
           <Section title={"visual"} color={"rgb(220, 46, 40)"}>
             <Grid container>
-              <Grid item xs={2}>
-                <Button
+              <Grid item xs={6}>
+                {/* <Button
                   variant="outlined"
                   color="primary"
                   onClick={() => {
                     dispatch(setGlitch(!glitch));
                   }}
                   label={"glitch"}
-                ></Button>
+                ></Button> */}
+                <Slider
+                  orientation="vertical"
+                  //   getAriaValueText={valuetext}
+                  defaultValue={2}
+                  min={2}
+                  max={20}
+                  value={intensity}
+                  onChange={(event, value) => {
+                    dispatch(setIntensity(value));
+                  }}
+                  label={"intensity"}
+                />
               </Grid>
             </Grid>
           </Section>
@@ -87,7 +101,7 @@ export default () => {
                   onChange={(event, value) => {
                     dispatch(setVolumeInteractions(value));
                   }}
-                  label={"audience"}
+                  label={"actions"}
                 />
               </Grid>
             </Grid>

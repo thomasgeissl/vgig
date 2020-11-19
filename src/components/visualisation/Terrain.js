@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
 import { useUpdate, useFrame } from "react-three-fiber";
 import SimplexNoise from "simplex-noise";
 
@@ -33,6 +34,7 @@ const Terrain = ({
   analyser,
 }) => {
   const simplex = useMemo(() => new SimplexNoise(seed), [seed]);
+  const intensity = useSelector((state) => state.mixer.intensity);
 
   const geometryRef = useUpdate(
     (geometry) => {
@@ -50,7 +52,7 @@ const Terrain = ({
   );
   useFrame(() => {
     frameCounter++;
-    if (frameCounter % 3 === 0) {
+    if (frameCounter % 4 === 0) {
       const fft = analyser.getValue();
       const sum = fft.reduce(function (a, b) {
         return a + b;
@@ -68,12 +70,15 @@ const Terrain = ({
         const remainder = index % 32;
         const mappedIndex = Math.floor(index / 32) + remainder * 32;
         geometryRef.current.vertices[mappedIndex].y =
-          Math.abs(value * -0.008) * 2;
+          // Math.abs(value * -0.008) * intensity;
+          value * -0.008 * intensity - intensity;
         // geometryRef.current.vertices[index].y = Math.abs(value * -0.008) * 2;
       });
-      geometryRef.current.rotateY += 0.03;
       geometryRef.current.elementsNeedUpdate = true;
     }
+  });
+  useFrame(() => {
+    // console.log(geometryRef.current); //.y += 0.3;
   });
 
   return (

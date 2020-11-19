@@ -1,6 +1,8 @@
 const types = {
   SETVOLUMEINTERACTIONS: "SETVOLUMEINTERACTIONS",
   SETVOLUMESTAGE: "SETVOLUMESTAGE",
+  SETINTENSITY: "SETINTENSITY",
+  SETSPEED: "SETSPEED",
   SETGLITCH: "SETGLITCH",
   SETPIXELATION: "SETPIXELATION",
 };
@@ -8,6 +10,8 @@ const types = {
 const defaultState = {
   volumeInteractions: 6,
   volumeStage: 6,
+  intensity: 2,
+  speed: 2,
   glitch: true,
   pixelation: 1,
 };
@@ -24,6 +28,18 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         volumeStage: action.payload.value,
+      };
+    }
+    case types.SETINTENSITY: {
+      return {
+        ...state,
+        intensity: action.payload.value,
+      };
+    }
+    case types.SETSPEED: {
+      return {
+        ...state,
+        speed: action.payload.value,
       };
     }
     case types.SETGLITCH: {
@@ -54,6 +70,14 @@ export const setVolumeInteractions = (value) => {
 export const setVolumeStage = (value) => {
   return {
     type: types.SETVOLUMESTAGE,
+    payload: {
+      value,
+    },
+  };
+};
+export const setIntensity = (value) => {
+  return {
+    type: types.SETINTENSITY,
     payload: {
       value,
     },
