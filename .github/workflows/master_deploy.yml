@@ -23,8 +23,9 @@ jobs:
       run: yarn build
       env:
         CI: false
-    - name: Deploy to gh-pages
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@4.0.0
       with:
-        deploy_key: ${{ secrets.ACCESS_TOKEN }}
-        publish_dir: ./build
+        token: ${{ secrets.ACCESS_TOKEN }}
+        branch: gh-pages # The branch the action should deploy to.
+        folder: build # The folder the action should deploy.
