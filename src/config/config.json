@@ -1,5 +1,5 @@
 {
-    "broker": "wss://audience:audience@v-gig.com:8081",
+    "broker": "wss://public:public@public.cloud.shiftr.io",
     "orchestra": [],
     "actions": [
         {

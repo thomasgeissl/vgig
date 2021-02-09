@@ -1,7 +1,8 @@
 # vgig
 
+
 ## Build status
-[![Build Status](https://travis-ci.com/thomasgeissl/vgig.svg?branch=master)](https://travis-ci.com/thomasgeissl/vgig)
+[![Build Status](https://github.com/thomasgeissl/vgig/workflows/master_deploy/badge.svg)](https://github.com/thomasgeissl/vgig/actions?query=workflow%3Amaster_deploy)
 
 ## usage
 ### dev
